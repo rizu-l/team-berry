@@ -3,17 +3,17 @@ extends CharacterBody2D
 const RunSPEED = 300.0
 const SPEED = 100.0
 const JUMP_VELOCITY = -400.0
-
 var currentState
 var jumpDirection = 0  # Store the jump direction
 var lastDirection = 1  # Store the last facing direction (1 = right, -1 = left)
 var doubleJump = true
-enum State { IdleLeft, IdleRight, RunLeft, RunRight, WalkLeft, WalkRight, JumpLeft, JumpRight, FallLeft, FallRight}
-
+var isDoubleJumping = false
+var unlocked_abilities: Dictionary = {}
+enum State { IdleLeft, IdleRight, RunLeft, RunRight, WalkLeft, WalkRight, JumpLeft, JumpRight, FallLeft, FallRight, DoubleJumpLeft, DoubleJumpRight}
 func _ready():
 	currentState = State.IdleLeft
-	
-	
+	add_to_group("player")
+
 func _physics_process(delta: float) -> void:
 	player_idle(delta)
 	
@@ -22,23 +22,22 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 	else:
 		doubleJump = true
+		isDoubleJumping = false
 	player_jump(delta)
 	player_run(delta)
 	move_and_slide()
 	player_animations()
-
 func player_idle(delta):
 	if is_on_floor():
 		if lastDirection > 0:
 			currentState = State.IdleRight
 		else:
 			currentState = State.IdleLeft
-		
 func player_run(delta):
 	var direction = Input.get_axis("ui_left", "ui_right")
 	if direction:
 		velocity.x = direction * SPEED
-		lastDirection = direction  # Track the last direction moved
+		lastDirection = direction
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 	
@@ -71,10 +70,11 @@ func player_jump(delta):
 				jumpDirection = direction
 			else:
 				jumpDirection = lastDirection
-		# Double jump (in air with jump available)
-		elif doubleJump:
+		# Double jump (only if WINGS ability is unlocked)
+		elif doubleJump and unlocked_abilities.has(AbilityData.ability_list.WINGS):
 			velocity.y = JUMP_VELOCITY
-			doubleJump = false  # Consume the double jump
+			doubleJump = false
+			isDoubleJumping = true
 			if direction != 0:
 				jumpDirection = direction
 			else:
@@ -90,10 +90,16 @@ func player_jump(delta):
 				elif lastDirection < 0:
 					currentState = State.FallLeft
 			else:
-				if jumpDirection > 0:
-					currentState = State.JumpRight
-				elif jumpDirection < 0:
-					currentState = State.JumpLeft
+				if isDoubleJumping:
+					if jumpDirection > 0:
+						currentState = State.DoubleJumpRight
+					elif jumpDirection < 0:
+						currentState = State.DoubleJumpLeft
+				else:
+					if jumpDirection > 0:
+						currentState = State.JumpRight
+					elif jumpDirection < 0:
+						currentState = State.JumpLeft
 		
 	# Only update jump state if in the air
 	if not is_on_floor():
@@ -104,11 +110,17 @@ func player_jump(delta):
 			elif lastDirection < 0:
 				currentState = State.FallLeft
 		else:
-			# Still ascending
-			if jumpDirection > 0:
-				currentState = State.JumpRight
-			elif jumpDirection < 0:
-				currentState = State.JumpLeft
+			# Still ascending - check if double jumping
+			if isDoubleJumping:
+				if jumpDirection > 0:
+					currentState = State.DoubleJumpRight
+				elif jumpDirection < 0:
+					currentState = State.DoubleJumpLeft
+			else:
+				if jumpDirection > 0:
+					currentState = State.JumpRight
+				elif jumpDirection < 0:
+					currentState = State.JumpLeft
 		
 func player_animations():
 	if currentState == State.IdleLeft:
@@ -127,6 +139,10 @@ func player_animations():
 		animated_sprite_2d.play("JumpLeft")
 	elif currentState == State.JumpRight:
 		animated_sprite_2d.play("JumpRight")
+	elif currentState == State.DoubleJumpLeft:
+		animated_sprite_2d.play("DoubleJumpLeft")
+	elif currentState == State.DoubleJumpRight:
+		animated_sprite_2d.play("DoubleJumpRight")
 	elif currentState == State.FallLeft:
 		animated_sprite_2d.play("FallLeft")
 	elif currentState == State.FallRight:

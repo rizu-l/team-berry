@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c37ay0vumv7yg" path="res://tileset/all_original_edited_tiles-1.png-8.png" id="1_qxhol"]
 [ext_resource type="PackedScene" uid="uid://djgulxsq4f6dk" path="res://player/character_body_2d.tscn" id="2_cdomt"]
+[ext_resource type="PackedScene" uid="uid://3s0j5f5hvans" path="res://player/ability_unlock.tscn" id="3_7g65i"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cdomt"]
 texture = ExtResource("1_qxhol")
@@ -835,7 +836,12 @@ layer_0/name = "Ground"
 layer_0/tile_data = PackedInt32Array(-65536, 393218, 22, -65535, 393218, 22, -65534, 393218, 22, -65533, 393218, 22, -65532, 393218, 22, -65531, 393218, 22, -65530, 393218, 22, -65529, 393218, 22, -65528, 393218, 22, -65527, 393218, 22, -65526, 393218, 22, -65525, 393218, 22, -65524, 393218, 22, -65523, 393218, 22, -65522, 393218, 22, -65521, 393218, 22, -65520, 393218, 22, -65519, 393218, 22, -65518, 393218, 22, -65517, 393218, 22, -65516, 393218, 22, -65515, 393218, 22, -65514, 393218, 22, -65513, 393218, 22, -65512, 393218, 22, -65511, 393218, 22, -65510, 393218, 22, -65509, 393218, 22, -65508, 393218, 22, -65507, 393218, 22, -65506, 393218, 22, -65505, 393218, 22, -65504, 393218, 22, -458744, 393218, 22, -458743, 393218, 22, -458742, 393218, 22, -458741, 393218, 22, -458740, 393218, 22, -458739, 393218, 22, -196606, 393218, 22, -196605, 393218, 22, -196604, 393218, 22, -393200, 393218, 22, -393199, 393218, 22, -393198, 393218, 22, -393197, 393218, 22, -393196, 393218, 22, -393195, 393218, 22, -393194, 393218, 22, -393193, 393218, 22, -393192, 393218, 22, -327681, 393218, 22, -393216, 393218, 22, -393215, 393218, 22, -393214, 393218, 22, -196603, 393218, 22, -196602, 393218, 22, -327679, 393218, 22, -327678, 393218, 22, -327677, 393218, 22)
 
 [node name="CharacterBody2D" parent="." unique_id=397244321 instance=ExtResource("2_cdomt")]
-position = Vector2(128, -25)
+position = Vector2(164, -139)
+collision_layer = 6
+collision_mask = 3
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=1437247369]
 zoom = Vector2(4, 4)
+
+[node name="AbilityUnlock" parent="." unique_id=770238939 instance=ExtResource("3_7g65i")]
+position = Vector2(509, -79)
