@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://djgulxsq4f6dk"]
+[gd_scene load_steps=62 format=3 uid="uid://djgulxsq4f6dk"]
 
 [ext_resource type="Script" uid="uid://dyjm10cxueg0b" path="res://player/player.gd" id="1_fui21"]
 [ext_resource type="Texture2D" uid="uid://cew3pftebr2yx" path="res://player/character-spritesheet-WingedSteel.png" id="1_liy72"]
@@ -459,19 +459,20 @@ animations = [{
 "speed": 9.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_fui21"]
-size = Vector2(12, 43)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ylu1k"]
+radius = 7.0
+height = 45.0
 
-[node name="Player" type="CharacterBody2D" unique_id=397244321]
+[node name="Player" type="CharacterBody2D"]
 collision_layer = 6
 collision_mask = 3
 script = ExtResource("1_fui21")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=942399356]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, -32)
 sprite_frames = SubResource("SpriteFrames_glt2p")
 animation = &"DoubleJumpRight"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=12988889]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -25.5)
-shape = SubResource("RectangleShape2D_fui21")
+shape = SubResource("CapsuleShape2D_ylu1k")
