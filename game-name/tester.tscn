@@ -1,8 +1,20 @@
-[gd_scene load_steps=6 format=4 uid="uid://ch4awp27uhxxo"]
+[gd_scene load_steps=18 format=4 uid="uid://ch4awp27uhxxo"]
 
 [ext_resource type="Texture2D" uid="uid://c37ay0vumv7yg" path="res://tileset/all_original_edited_tiles-1.png-8.png" id="1_qxhol"]
 [ext_resource type="PackedScene" uid="uid://djgulxsq4f6dk" path="res://player/character_body_2d.tscn" id="2_cdomt"]
 [ext_resource type="PackedScene" uid="uid://3s0j5f5hvans" path="res://player/ability_unlock.tscn" id="3_7g65i"]
+[ext_resource type="Texture2D" uid="uid://cayl7ppss6dum" path="res://assets/hp_bar_under.png" id="4_x3eih"]
+[ext_resource type="Texture2D" uid="uid://bftwrr5puee3j" path="res://assets/hp_bar_over.png" id="5_gdr51"]
+[ext_resource type="Texture2D" uid="uid://dbgac8y46lwj" path="res://assets/hp_bar_progress.png" id="6_1vgfy"]
+[ext_resource type="FontFile" uid="uid://dwkvnvwhchnmj" path="res://icons/ARCADECLASSIC.TTF" id="7_gdr51"]
+[ext_resource type="Script" uid="uid://cldayk6pqgeb0" path="res://script/hp_ui.gd" id="8_q8n2b"]
+[ext_resource type="Texture2D" uid="uid://bp2f3atgc5alp" path="res://assets/mp_bar_under.png" id="9_8lkhd"]
+[ext_resource type="Texture2D" uid="uid://4ynelfejdvs8" path="res://assets/mp_bar_over.png" id="10_mpo7f"]
+[ext_resource type="Texture2D" uid="uid://dp3ywefc7qf8s" path="res://assets/mp_bar_progress.png" id="11_ara7v"]
+[ext_resource type="Texture2D" uid="uid://brbi550jwv1sn" path="res://assets/boss_bar_under.png" id="12_8v3mp"]
+[ext_resource type="PackedScene" uid="uid://boafyblrplqcp" path="res://enemies/frogger.tscn" id="12_mpo7f"]
+[ext_resource type="Texture2D" uid="uid://q2fbfc1g4jrj" path="res://assets/boss_bar_over.png" id="13_d2fkb"]
+[ext_resource type="Texture2D" uid="uid://ccxrjc4iu5fek" path="res://assets/boss_bar_progress.png" id="14_4j3mb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cdomt"]
 texture = ExtResource("1_qxhol")
@@ -612,37 +624,37 @@ texture = ExtResource("1_qxhol")
 30:20/0 = 0
 31:20/0 = 0
 0:21/0 = 0
-0:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.7770329, 0.91372967, -4.3655987)
 1:21/0 = 0
-1:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 2:21/0 = 0
-2:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+2:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 3:21/0 = 0
-3:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+3:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 4:21/0 = 0
-4:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+4:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 5:21/0 = 0
-5:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+5:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 6:21/0 = 0
-6:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+6:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 7:21/0 = 0
-7:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+7:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 8:21/0 = 0
-8:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+8:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 9:21/0 = 0
-9:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+9:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 10:21/0 = 0
-10:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+10:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 11:21/0 = 0
-11:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+11:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 12:21/0 = 0
-12:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+12:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 13:21/0 = 0
-13:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+13:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 14:21/0 = 0
-14:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+14:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.5180216, -8, -2.5180216)
 15:21/0 = 0
-15:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+15:21/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 2.877739, -8, -1.978447, -4.3166084, -8, -3.057598)
 16:21/0 = 0
 17:21/0 = 0
 18:21/0 = 0
@@ -956,15 +968,136 @@ sources/2 = SubResource("TileSetAtlasSource_cdomt")
 [node name="Level" type="Node2D"]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
+position = Vector2(1023, 731)
 tile_map_data = PackedByteArray("AAAIAPz/AgAIAAcAAAAIAP3/AgAIAAgAAAAIAP7/AgAIAAkAAAAIAP//AgAIAAoAAAAIAAAAAgAIAAsAAAAJAPz/AgAJAAcAAAAJAP3/AgAJAAgAAAAJAP7/AgAJAAkAAAAJAP//AgAJAAoAAAAJAAAAAgAJAAsAAAAKAPz/AgAKAAcAAAAKAP3/AgAKAAgAAAAKAP7/AgAKAAkAAAAKAP//AgAKAAoAAAAKAAAAAgAKAAsAAAALAPz/AgALAAcAAAALAP3/AgALAAgAAAALAP7/AgALAAkAAAALAP//AgALAAoAAAALAAAAAgALAAsAAAAMAPv/AgAMAAYAAAAMAPz/AgAMAAcAAAAMAP3/AgAMAAgAAAAMAP7/AgAMAAkAAAAMAP//AgAMAAoAAAAMAAAAAgAMAAsAAAANAPv/AgANAAYAAAANAPz/AgANAAcAAAANAP3/AgANAAgAAAANAP7/AgANAAkAAAANAP//AgANAAoAAAANAAAAAgANAAsAAAAOAPv/AgAIAAYAAAAOAPz/AgAIAAcAAAAOAP3/AgAIAAgAAAAOAP7/AgAIAAkAAAAOAP//AgAIAAoAAAAOAAAAAgAIAAsAAAAPAPv/AgAJAAYAAAAPAPz/AgAJAAcAAAAPAP3/AgAJAAgAAAAPAP7/AgAJAAkAAAAPAP//AgAJAAoAAAAPAAAAAgAJAAsAAAAQAPv/AgAKAAYAAAAQAPz/AgAKAAcAAAAQAP3/AgAKAAgAAAAQAP7/AgAKAAkAAAAQAP//AgAKAAoAAAAQAAAAAgAKAAsAAAARAPv/AgALAAYAAAARAPz/AgALAAcAAAARAP3/AgALAAgAAAARAP7/AgALAAkAAAARAP//AgALAAoAAAARAAAAAgALAAsAAAASAPv/AgAMAAYAAAASAPz/AgAMAAcAAAASAP3/AgAMAAgAAAASAP7/AgAMAAkAAAASAP//AgAMAAoAAAASAAAAAgAMAAsAAAATAPv/AgANAAYAAAATAPz/AgANAAcAAAATAP3/AgANAAgAAAATAP7/AgANAAkAAAATAP//AgANAAoAAAATAAAAAgANAAsAAAAUAPv/AgAIAAYAAAAUAPz/AgAIAAcAAAAUAP3/AgAIAAgAAAAUAP7/AgAIAAkAAAAUAP//AgAIAAoAAAAUAAAAAgAIAAsAAAAVAPv/AgAJAAYAAAAVAPz/AgAJAAcAAAAVAP3/AgAJAAgAAAAVAP7/AgAJAAkAAAAVAP//AgAJAAoAAAAVAAAAAgAJAAsAAAAWAPv/AgAKAAYAAAAWAPz/AgAKAAcAAAAWAP3/AgAKAAgAAAAWAP7/AgAKAAkAAAAWAP//AgAKAAoAAAAWAAAAAgAKAAsAAAAXAPv/AgALAAYAAAAXAPz/AgALAAcAAAAXAP3/AgALAAgAAAAXAP7/AgALAAkAAAAXAP//AgALAAoAAAAXAAAAAgALAAsAAAAYAPv/AgAMAAYAAAAYAPz/AgAMAAcAAAAYAP3/AgAMAAgAAAAYAP7/AgAMAAkAAAAYAP//AgAMAAoAAAAYAAAAAgAMAAsAAAAZAPv/AgANAAYAAAAZAPz/AgANAAcAAAAZAP3/AgANAAgAAAAZAP7/AgANAAkAAAAZAP//AgANAAoAAAAZAAAAAgANAAsAAAACAPv/AgAIAAYAAAACAPz/AgAIAAcAAAACAP3/AgAIAAgAAAACAP7/AgAIAAkAAAACAP//AgAIAAoAAAACAAAAAgAIAAsAAAADAPv/AgAJAAYAAAADAPz/AgAJAAcAAAADAP3/AgAJAAgAAAADAP7/AgAJAAkAAAADAP//AgAJAAoAAAADAAAAAgAJAAsAAAAEAPv/AgAKAAYAAAAEAPz/AgAKAAcAAAAEAP3/AgAKAAgAAAAEAP7/AgAKAAkAAAAEAP//AgAKAAoAAAAEAAAAAgAKAAsAAAAFAPv/AgALAAYAAAAFAPz/AgALAAcAAAAFAP3/AgALAAgAAAAFAP7/AgALAAkAAAAFAP//AgALAAoAAAAFAAAAAgALAAsAAAAGAPv/AgAMAAYAAAAGAPz/AgAMAAcAAAAGAP3/AgAMAAgAAAAGAP7/AgAMAAkAAAAGAP//AgAMAAoAAAAGAAAAAgAMAAsAAAAHAPv/AgANAAYAAAAHAPz/AgANAAcAAAAHAP3/AgANAAgAAAAHAP7/AgANAAkAAAAHAP//AgANAAoAAAAHAAAAAgANAAsAAAD8//v/AgAIAAYAAAD8//z/AgAIAAcAAAD8//3/AgAIAAgAAAD8//7/AgAIAAkAAAD8////AgAIAAoAAAD8/wAAAgAIAAsAAAD9//v/AgAJAAYAAAD9//z/AgAJAAcAAAD9//3/AgAJAAgAAAD9//7/AgAJAAkAAAD9////AgAJAAoAAAD9/wAAAgAJAAsAAAD+//v/AgAKAAYAAAD+//z/AgAKAAcAAAD+//3/AgAKAAgAAAD+//7/AgAKAAkAAAD+////AgAKAAoAAAD+/wAAAgAKAAsAAAD///v/AgALAAYAAAD///z/AgALAAcAAAD///3/AgALAAgAAAD///7/AgALAAkAAAD/////AgALAAoAAAD//wAAAgALAAsAAAAAAPv/AgAMAAYAAAAAAPz/AgAMAAcAAAAAAP3/AgAMAAgAAAAAAP7/AgAMAAkAAAAAAP//AgAMAAoAAAAAAAAAAgAMAAsAAAABAPv/AgANAAYAAAABAPz/AgANAAcAAAABAP3/AgANAAgAAAABAP7/AgANAAkAAAABAP//AgANAAoAAAABAAAAAgANAAsAAAD5//n/AgAAABQAAAD5//r/AgAAABUAAAD6//n/AgABABQAAAD6//r/AgABABUAAAD7//n/AgACABQAAAD7//r/AgACABUAAAAbAPn/AgAOABQAAAAbAPr/AgAOABUAAAAcAPn/AgAPABQAAAAcAPr/AgAPABUAAAAfAPb/AgAAABQAAAAfAPf/AgAAABUAAAAgAPb/AgABABQAAAAgAPf/AgABABUAAAAhAPb/AgACABQAAAAhAPf/AgACABUAAAAiAPb/AgADABQAAAAiAPf/AgADABUAAAAjAPb/AgAEABQAAAAjAPf/AgAEABUAAAAkAPb/AgAFABQAAAAkAPf/AgAFABUAAAAlAPb/AgAGABQAAAAlAPf/AgAGABUAAAAmAPb/AgAHABQAAAAmAPf/AgAHABUAAAAnAPb/AgAIABQAAAAnAPf/AgAIABUAAAAoAPb/AgAJABQAAAAoAPf/AgAJABUAAAApAPb/AgAKABQAAAApAPf/AgAKABUAAAAqAPb/AgALABQAAAAqAPf/AgALABUAAAArAPb/AgAMABQAAAArAPf/AgAMABUAAAAsAPb/AgANABQAAAAsAPf/AgANABUAAAAtAPb/AgAOABQAAAAtAPf/AgAOABUAAAAuAPb/AgAPABQAAAAuAPf/AgAPABUAAAAvAPL/AgAAABQAAAAvAPP/AgAAABUAAAAwAPL/AgABABQAAAAwAPP/AgABABUAAAAxAPL/AgAMABQAAAAxAPP/AgAMABUAAAAyAPL/AgANABQAAAAyAPP/AgANABUAAAAzAPL/AgAOABQAAAAzAPP/AgAOABUAAAA0APL/AgAPABQAAAA0APP/AgAPABUAAAALAPv/AgALAAYAAAAKAPv/AgAKAAYAAAAJAPv/AgAJAAYAAAAIAPv/AgAIAAYAAAD8//n/AgAIAA4AAAD8//r/AgAIAA8AAAD9//n/AgAJAA4AAAD9//r/AgAJAA8AAAD+//n/AgAKAA4AAAD+//r/AgAKAA8AAAD///n/AgALAA4AAAD///r/AgALAA8AAAAAAPn/AgAIAA4AAAAAAPr/AgAIAA8AAAABAPn/AgAJAA4AAAABAPr/AgAJAA8AAAACAPn/AgAKAA4AAAACAPr/AgAKAA8AAAADAPn/AgALAA4AAAADAPr/AgALAA8AAAAEAPn/AgAIAA4AAAAEAPr/AgAIAA8AAAAFAPn/AgAJAA4AAAAFAPr/AgAJAA8AAAAGAPn/AgAKAA4AAAAGAPr/AgAKAA8AAAAHAPn/AgALAA4AAAAHAPr/AgALAA8AAAAIAPn/AgAIAA4AAAAIAPr/AgAIAA8AAAAJAPn/AgAJAA4AAAAJAPr/AgAJAA8AAAAKAPn/AgAKAA4AAAAKAPr/AgAKAA8AAAALAPn/AgALAA4AAAALAPr/AgALAA8AAAAMAPn/AgAIAA4AAAAMAPr/AgAIAA8AAAANAPn/AgAJAA4AAAANAPr/AgAJAA8AAAAOAPn/AgAKAA4AAAAOAPr/AgAKAA8AAAAPAPn/AgALAA4AAAAPAPr/AgALAA8AAAAQAPn/AgAIAA4AAAAQAPr/AgAIAA8AAAARAPn/AgAJAA4AAAARAPr/AgAJAA8AAAASAPn/AgAKAA4AAAASAPr/AgAKAA8AAAATAPn/AgALAA4AAAATAPr/AgALAA8AAAAUAPn/AgAIAA4AAAAUAPr/AgAIAA8AAAAVAPn/AgAJAA4AAAAVAPr/AgAJAA8AAAAWAPn/AgAKAA4AAAAWAPr/AgAKAA8AAAAXAPn/AgALAA4AAAAXAPr/AgALAA8AAAAYAPn/AgAIAA4AAAAYAPr/AgAIAA8AAAAZAPn/AgAJAA4AAAAZAPr/AgAJAA8AAAAaAPn/AgALAA4AAAAaAPr/AgANABUAAAA=")
 tile_set = SubResource("TileSet_7g65i")
 use_kinematic_bodies = true
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_cdomt")]
-position = Vector2(164, -139)
+position = Vector2(1187, 592)
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
 zoom = Vector2(4, 4)
 
 [node name="AbilityUnlock" parent="." instance=ExtResource("3_7g65i")]
-position = Vector2(344, -160)
+position = Vector2(1369, 504)
+scale = Vector2(1, 1)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="HPUI" type="Control" parent="HUD"]
+layout_direction = 4
+layout_mode = 3
+anchors_preset = 0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 172.0
+offset_bottom = 172.0
+script = ExtResource("8_q8n2b")
+
+[node name="HPBar" type="TextureProgressBar" parent="HUD/HPUI"]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+scale = Vector2(5, 5)
+value = 67.0
+fill_mode = 5
+texture_under = ExtResource("4_x3eih")
+texture_over = ExtResource("5_gdr51")
+texture_progress = ExtResource("6_1vgfy")
+
+[node name="Label" type="Label" parent="HUD/HPUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("7_gdr51")
+theme_override_font_sizes/font_size = 48
+text = "67"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MPUI" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 206.0
+offset_top = 27.0
+offset_right = 452.0
+offset_bottom = 119.0
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="HUD/MPUI"]
+layout_mode = 0
+offset_left = 10.999998
+offset_top = -6.0
+offset_right = 43.0
+offset_bottom = 2.0
+scale = Vector2(6, 6)
+value = 54.0
+texture_under = ExtResource("9_8lkhd")
+texture_over = ExtResource("10_mpo7f")
+texture_progress = ExtResource("11_ara7v")
+
+[node name="Label" type="Label" parent="HUD/MPUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("7_gdr51")
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BossUI" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 936.0
+offset_top = 17.0
+offset_right = 1476.0
+offset_bottom = 137.0
+
+[node name="BossName" type="Label" parent="HUD/BossUI"]
+layout_mode = 0
+offset_left = 542.0
+offset_top = -8.0
+offset_right = 1035.0
+offset_bottom = 122.0
+theme_override_fonts/font = ExtResource("7_gdr51")
+theme_override_font_sizes/font_size = 128
+text = "FROGGER"
+
+[node name="BossBar" type="TextureProgressBar" parent="HUD/BossUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 27.0
+offset_top = -1.0
+offset_right = -481.0
+offset_bottom = -113.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(15, 15)
+texture_under = ExtResource("12_8v3mp")
+texture_over = ExtResource("13_d2fkb")
+texture_progress = ExtResource("14_4j3mb")
+
+[node name="Frogger" parent="." instance=ExtResource("12_mpo7f")]
+position = Vector2(1075, 502)
+enemy_name = "Frogger"
+contact_damage_cooldown = 3.0
