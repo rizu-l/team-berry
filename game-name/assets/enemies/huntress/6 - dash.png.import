@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ct0lvmvvx2oox"
-path="res://.godot/imported/Mushroom-Attack.png-7d4f44d54323961742b791092598fae2.ctex"
+uid="uid://b52xidmgn85kc"
+path="res://.godot/imported/6 - dash.png-4fa92a839af301c91ff25c5e5d3fcee8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemies/mushroom/Mushroom-Attack.png"
-dest_files=["res://.godot/imported/Mushroom-Attack.png-7d4f44d54323961742b791092598fae2.ctex"]
+source_file="res://assets/enemies/huntress/6 - dash.png"
+dest_files=["res://.godot/imported/6 - dash.png-4fa92a839af301c91ff25c5e5d3fcee8.ctex"]
 
 [params]
 

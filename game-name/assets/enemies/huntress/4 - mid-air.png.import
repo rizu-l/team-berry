@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqvjuyj40of2g"
-path="res://.godot/imported/Mushroom-Hit.png-8b91922f4a94bbb3d4fb1751c53f49ef.ctex"
+uid="uid://cg0ie3fe3v1en"
+path="res://.godot/imported/4 - mid-air.png-8eaa2ea861b48aa6eae04d2cb8288906.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemies/mushroom/Mushroom-Hit.png"
-dest_files=["res://.godot/imported/Mushroom-Hit.png-8b91922f4a94bbb3d4fb1751c53f49ef.ctex"]
+source_file="res://assets/enemies/huntress/4 - mid-air.png"
+dest_files=["res://.godot/imported/4 - mid-air.png-8eaa2ea861b48aa6eae04d2cb8288906.ctex"]
 
 [params]
 

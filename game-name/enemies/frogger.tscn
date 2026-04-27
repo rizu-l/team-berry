@@ -426,7 +426,23 @@ polygon = PackedVector2Array(0, 0, -36, 38, -35, 64, 38, 64, 44, 42, 41, 13, 22,
 position = Vector2(0, -64)
 polygon = PackedVector2Array(0, 0, -36, 38, -35, 64, 38, 64, 44, 42, 41, 13, 22, 4)
 
+[node name="TongueHitbox" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="TongueHitbox"]
+position = Vector2(59, -70)
+polygon = PackedVector2Array(3, 26, -36, 38, -35, 64, 38, 64, 104, 42, 68, 26, 23, 23)
+disabled = true
+
+[node name="SpitHitbox" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="SpitHitbox"]
+position = Vector2(73, -86)
+polygon = PackedVector2Array(3, 26, -31, 38, -35, 64, -37, 84, 124, 87, 108, 63, 23, 32)
+disabled = true
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -64)
 sprite_frames = SubResource("SpriteFrames_8krf2")
-animation = &"idle"
+animation = &"tongue"
+frame_progress = 0.9284603
+metadata/_edit_lock_ = true
