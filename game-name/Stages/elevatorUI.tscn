@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://naxkkcbggpek"]
+
+[ext_resource type="Script" uid="uid://dnt30npks24pj" path="res://Stages/elevator_ui.gd" id="1_xl16l"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=403637721]
+layer = 5
+script = ExtResource("1_xl16l")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=705885224]
+z_index = 10
+offset_left = -40.0
+offset_top = -604.0
+offset_right = 55.0
+offset_bottom = -503.0
+
+[node name="Floor2" type="Button" parent="VBoxContainer" unique_id=2143961999]
+z_index = 5
+layout_mode = 2
+text = "Hub"
+
+[node name="Floor1" type="Button" parent="VBoxContainer" unique_id=2113106881]
+z_index = 5
+layout_mode = 2
+text = "Floor 1"
+
+[node name="Floor0" type="Button" parent="VBoxContainer" unique_id=1044754952]
+z_index = 5
+layout_mode = 2
+text = "Floor 0"
+
+[connection signal="pressed" from="VBoxContainer/Floor2" to="." method="_on_button_pressed" binds= [2]]
+[connection signal="pressed" from="VBoxContainer/Floor1" to="." method="_on_button_pressed" binds= [1]]
+[connection signal="pressed" from="VBoxContainer/Floor0" to="." method="_on_button_pressed" binds= [0]]
