@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfa15ybkhynoo"
-path="res://.godot/imported/Mushroom-Die.png-6f5d84aaaa2753e9254ae4dacbb877be.ctex"
+uid="uid://du5gvhp7klhfh"
+path="res://.godot/imported/8 - jump-down-attack.png-b6802de146082e1243a16fdc51393363.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemies/mushroom/Mushroom-Die.png"
-dest_files=["res://.godot/imported/Mushroom-Die.png-6f5d84aaaa2753e9254ae4dacbb877be.ctex"]
+source_file="res://assets/enemies/huntress/8 - jump-down-attack.png"
+dest_files=["res://.godot/imported/8 - jump-down-attack.png-b6802de146082e1243a16fdc51393363.ctex"]
 
 [params]
 
