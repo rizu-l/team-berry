@@ -7,6 +7,7 @@ signal damaged(amount: int)
 signal contact_damage_applied(target: Node, damage: int)
 signal hit_by_player_attack(attacker: Node, damage: int)
 
+@export var mp_regen = 7
 @export var enemy_name: String = "Enemy"
 @export var is_boss: bool = false
 @export var max_hp: int = 100
@@ -71,6 +72,7 @@ func take_damage(amount: int) -> void:
 	hp = max(hp - applied_damage, 0)
 	damaged.emit(applied_damage)
 	health_changed.emit(hp, max_hp)
+	GameManager.set_player_mp(GameManager.get_player_mp()+ mp_regen)
 
 	if hp == 0:
 		die()

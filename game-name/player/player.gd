@@ -33,14 +33,14 @@ var attack_hitbox_shapes = []
 var attack_hitbox_base_positions: Array[Vector2] = []
 var attack_hitbox_shape_base_positions: Array[Vector2] = []
 var last_safe_ground_position = Vector2.ZERO
-enum State { Idle, Walk, Run, Jump, Fall, DoubleJump, Blink, Dash }
+enum State { Idle, Walk, Run, Jump, Fall, DoubleJump, Blink, Dash, Sit}
 
 @export var starting_max_hp: int = 100
 @export var starting_hp: int = 70
 @export var starting_max_mp: float = 100.0
 @export var starting_mp: float = 50.0
 @export var starting_attack: int = 10
-@export var mp_regen_per_second: float = 8.0
+@export var mp_regen_per_second: float = 3.0
 @export var heal_amount: int = 30
 @export var heal_mp_cost: float = 25.0
 @export var void_y_threshold: float = 1000.0
@@ -292,7 +292,8 @@ func player_attack() -> void:
 
 	if is_attacking or is_dashing or is_blinking:
 		return
-
+	
+	
 	perform_attack_combo()
 
 func player_run(delta):
@@ -324,7 +325,11 @@ func player_blink() -> void:
 
 	if not GameManager.has_ability(AbilityData.ability_list.BLINK):
 		return
+		
+	if mp <= 25:
+		return
 
+	mp -= 25
 	cancel_attack()
 	perform_blink()
 
@@ -617,3 +622,5 @@ func player_animations():
 		animated_sprite_2d.play("Blink")
 	elif currentState == State.Dash:
 		animated_sprite_2d.play("Fall")
+	elif currentState == State.Sit:
+		animated_sprite_2d.play("Sit")

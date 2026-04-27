@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=3 uid="uid://djgulxsq4f6dk"]
+[gd_scene format=3 uid="uid://djgulxsq4f6dk"]
 
 [ext_resource type="Script" uid="uid://dyjm10cxueg0b" path="res://player/player.gd" id="1_fui21"]
 [ext_resource type="Texture2D" uid="uid://cew3pftebr2yx" path="res://player/character-spritesheet-WingedSteel.png" id="1_liy72"]
@@ -200,6 +200,18 @@ region = Rect2(384, 2624, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_gx0am"]
 atlas = ExtResource("3_ylu1k")
 region = Rect2(448, 2624, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ydsn6"]
+atlas = ExtResource("3_ylu1k")
+region = Rect2(128, 1984, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8s3q5"]
+atlas = ExtResource("3_ylu1k")
+region = Rect2(0, 1984, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pl7dm"]
+atlas = ExtResource("3_ylu1k")
+region = Rect2(64, 1984, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qo86h"]
 atlas = ExtResource("3_ylu1k")
@@ -433,6 +445,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_ydsn6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8s3q5")
+}, {
+"duration": 1000000.0,
+"texture": SubResource("AtlasTexture_pl7dm")
+}],
+"loop": true,
+"name": &"Sit",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_qo86h")
 }, {
 "duration": 1.0,
@@ -504,21 +530,22 @@ size = Vector2(63, 34)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_00gdi"]
 size = Vector2(32, 45)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" unique_id=746612115]
 collision_layer = 6
 collision_mask = 3
 script = ExtResource("1_fui21")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=83885611]
 position = Vector2(1, -32)
 sprite_frames = SubResource("SpriteFrames_glt2p")
-animation = &"Attack1"
+animation = &"Sit"
+frame_progress = 0.02693579
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=743513336]
 position = Vector2(0, -25.5)
 shape = SubResource("CapsuleShape2D_ylu1k")
 
-[node name="DashParticles" type="GPUParticles2D" parent="."]
+[node name="DashParticles" type="GPUParticles2D" parent="." unique_id=1886675470]
 position = Vector2(0, -20)
 scale = Vector2(23, 23)
 emitting = false
@@ -529,29 +556,29 @@ visibility_rect = Rect2(-150, -100, 250, 200)
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_srn3j")
 
-[node name="AttackHitbox1" type="Area2D" parent="."]
+[node name="AttackHitbox1" type="Area2D" parent="." unique_id=1253156693]
 
-[node name="Hitbox1" type="CollisionShape2D" parent="AttackHitbox1"]
+[node name="Hitbox1" type="CollisionShape2D" parent="AttackHitbox1" unique_id=1579805784]
 position = Vector2(27.5, -22)
 shape = SubResource("RectangleShape2D_ydsn6")
 disabled = true
 
-[node name="AttackHitbox2" type="Area2D" parent="."]
+[node name="AttackHitbox2" type="Area2D" parent="." unique_id=1817830315]
 
-[node name="Hitbox2" type="CollisionShape2D" parent="AttackHitbox2"]
+[node name="Hitbox2" type="CollisionShape2D" parent="AttackHitbox2" unique_id=1048358680]
 position = Vector2(28.5, -18)
 shape = SubResource("RectangleShape2D_scca8")
 disabled = true
 
-[node name="AttackHitbox3" type="Area2D" parent="."]
+[node name="AttackHitbox3" type="Area2D" parent="." unique_id=2025899311]
 
-[node name="Hitbox3" type="CollisionShape2D" parent="AttackHitbox3"]
+[node name="Hitbox3" type="CollisionShape2D" parent="AttackHitbox3" unique_id=186071053]
 position = Vector2(39.5, -15)
 shape = SubResource("RectangleShape2D_5fe0u")
 disabled = true
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=1952938084]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1795339204]
 position = Vector2(0, -25.5)
 shape = SubResource("RectangleShape2D_00gdi")
