@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://naxkkcbggpek"]
+[gd_scene format=3 uid="uid://naxkkcbggpek"]
 
 [ext_resource type="Script" uid="uid://dnt30npks24pj" path="res://Stages/elevator_ui.gd" id="1_xl16l"]
 [ext_resource type="FontFile" uid="uid://dwkvnvwhchnmj" path="res://icons/ARCADECLASSIC.TTF" id="2_qq75b"]

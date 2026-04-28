@@ -1,4 +1,4 @@
-[gd_scene load_steps=97 format=3 uid="uid://dpdv3j1nnljvs"]
+[gd_scene format=3 uid="uid://dpdv3j1nnljvs"]
 
 [ext_resource type="Script" uid="uid://4ocgbcojcv34" path="res://enemies/huntress.gd" id="1_bl2mi"]
 [ext_resource type="Texture2D" uid="uid://bs88s08u4ajmy" path="res://assets/enemies/huntress/10 - attack 1.png" id="2_bl2mi"]
