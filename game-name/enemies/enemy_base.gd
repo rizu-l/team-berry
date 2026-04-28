@@ -16,12 +16,22 @@ signal hit_by_player_attack(attacker: Node, damage: int)
 @export var attack_power: int = 10
 @export var move_speed: float = 100.0
 @export var gravity_scale: float = 1.0
+@export var target_group: StringName = &"player"
+@export var target_detection_range: float = 420.0
+@export var ledge_avoidance_enabled: bool = true
+@export var void_death_enabled: bool = true
+@export var void_death_y_threshold: float = 1600.0
 @export var contact_knockback: Vector2 = Vector2(260.0, -220.0)
 @export var contact_damage_cooldown: float = 0.4
 @export_flags_2d_physics var body_collision_layer: int = 4
 @export_flags_2d_physics var body_collision_mask: int = 1
 @export_flags_2d_physics var contact_hitbox_collision_layer: int = 32
 @export_flags_2d_physics var contact_hitbox_collision_mask: int = 22
+
+const DEFAULT_PATH_STOPPING_DISTANCE := 24.0
+const DEFAULT_LEDGE_KEEPAWAY_DISTANCE := 42.0
+const LEDGE_PROBE_UP_OFFSET := 8.0
+const LEDGE_PROBE_DOWN_DISTANCE := 72.0
 
 var hp: int = 0
 var is_dead: bool = false
@@ -58,8 +68,108 @@ func _physics_process(delta: float) -> void:
 	update_contact_damage_cooldowns(delta)
 	update_overlapping_contact_damage()
 	update_overlapping_attack_hitboxes()
+	process_ai(delta)
+	prevent_ledge_fall()
 	apply_gravity(delta)
 	move_and_slide()
+	check_void_death()
+
+func process_ai(_delta: float) -> void:
+	pass
+
+func check_void_death() -> void:
+	if not void_death_enabled:
+		return
+	if global_position.y < void_death_y_threshold:
+		return
+
+	die()
+
+func find_nearest_target(max_range: float = -1.0) -> Node2D:
+	var targets := get_tree().get_nodes_in_group(target_group)
+	var nearest_target: Node2D = null
+	var nearest_distance_squared := INF
+	var max_distance_squared := max_range * max_range if max_range >= 0.0 else INF
+
+	for target_variant in targets:
+		var target := target_variant as Node2D
+		if target == null:
+			continue
+
+		var distance_squared := global_position.distance_squared_to(target.global_position)
+		if distance_squared > max_distance_squared:
+			continue
+		if distance_squared >= nearest_distance_squared:
+			continue
+
+		nearest_target = target
+		nearest_distance_squared = distance_squared
+
+	return nearest_target
+
+func get_direction_to_target(target: Node2D) -> float:
+	if target == null:
+		return 0.0
+
+	return signf(target.global_position.x - global_position.x)
+
+func get_basic_path_direction_to_target(target: Node2D, stopping_distance: float = -1.0) -> float:
+	if target == null:
+		return 0.0
+
+	var applied_stopping_distance := DEFAULT_PATH_STOPPING_DISTANCE if stopping_distance < 0.0 else stopping_distance
+	var distance_x := target.global_position.x - global_position.x
+	if absf(distance_x) <= applied_stopping_distance:
+		return 0.0
+
+	return get_ledge_safe_direction(signf(distance_x))
+
+func move_toward_target(target: Node2D, speed: float = -1.0, stopping_distance: float = -1.0) -> float:
+	var direction := get_basic_path_direction_to_target(target, stopping_distance)
+	var applied_speed := move_speed if speed < 0.0 else speed
+	velocity.x = direction * applied_speed
+	return direction
+
+func get_ledge_safe_direction(direction: float, keepaway_distance: float = -1.0) -> float:
+	if direction == 0.0:
+		return 0.0
+	if not ledge_avoidance_enabled:
+		return signf(direction)
+
+	var applied_keepaway_distance := DEFAULT_LEDGE_KEEPAWAY_DISTANCE if keepaway_distance < 0.0 else keepaway_distance
+	if has_floor_at_offset(signf(direction) * applied_keepaway_distance):
+		return signf(direction)
+
+	return 0.0
+
+func has_floor_at_offset(offset_x: float) -> bool:
+	var space_state := get_world_2d().direct_space_state
+	var probe_start := global_position + Vector2(offset_x, -LEDGE_PROBE_UP_OFFSET)
+	var probe_end := probe_start + Vector2(0.0, LEDGE_PROBE_DOWN_DISTANCE)
+	var query := PhysicsRayQueryParameters2D.create(probe_start, probe_end, body_collision_mask)
+	query.exclude = [get_rid()]
+	var result := space_state.intersect_ray(query)
+	return not result.is_empty()
+
+func is_near_ledge(direction: float, keepaway_distance: float = -1.0) -> bool:
+	return direction != 0.0 and get_ledge_safe_direction(direction, keepaway_distance) == 0.0
+
+func prevent_ledge_fall() -> void:
+	if not ledge_avoidance_enabled:
+		return
+	if not is_on_floor():
+		return
+	if velocity.x == 0.0:
+		return
+	if is_near_ledge(signf(velocity.x)):
+		velocity.x = 0.0
+
+func face_target(target: Node2D, sprite: AnimatedSprite2D) -> void:
+	var direction := get_direction_to_target(target)
+	if direction == 0.0:
+		return
+
+	sprite.flip_h = direction < 0.0
 
 func take_damage(amount: int) -> void:
 	if is_dead:
@@ -90,6 +200,13 @@ func die() -> void:
 
 	is_dead = true
 	died.emit()
+	call_deferred("finish_death")
+
+func finish_death() -> void:
+	if is_boss:
+		remove_from_group("bosses")
+	remove_from_group("enemies")
+	queue_free()
 
 func apply_gravity(delta: float) -> void:
 	if is_on_floor():
@@ -152,6 +269,8 @@ func _on_contact_hitbox_area_exited(area: Area2D) -> void:
 		active_attack_hitboxes.erase(attack_hitbox_instance_id)
 
 func apply_contact_damage(target: Node) -> void:
+	if not can_apply_contact_damage():
+		return
 	if contact_damage <= 0:
 		return
 	if not target.has_method("take_damage"):
@@ -167,6 +286,9 @@ func apply_contact_damage(target: Node) -> void:
 		target.call("apply_knockback", applied_knockback)
 
 	contact_damage_applied.emit(target, contact_damage)
+
+func can_apply_contact_damage() -> bool:
+	return true
 
 func apply_contact_damage_to_body(target: Node) -> void:
 	var body_instance_id: int = target.get_instance_id()
