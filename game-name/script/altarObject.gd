@@ -7,9 +7,9 @@ extends Area2D
 var player: Node = null
 var is_player_sitting: bool = false
 var heal_timer: float = 0.0
-var current_inventory_ui: Control = null
+var current_inventory_ui: Node = null
 
-@onready var interact_prompt: Label = $InteractPrompt
+@onready var interact_prompt: Label = $PromptLayer/InteractPrompt
 
 const inventory_ui_scene = preload("res://menus/InventoryUI.tscn")
 
@@ -35,7 +35,7 @@ func show_sit_prompt() -> void:
 	"""Wait for player to press E to sit"""
 	await get_tree().process_frame
 	while player != null and not is_player_sitting:
-		if Input.is_action_just_pressed("ui_interact"):
+		if Input.is_action_just_pressed("interact"):
 			sit_at_altar()
 			break
 		await get_tree().process_frame
@@ -57,12 +57,15 @@ func sit_at_altar() -> void:
 	# Open inventory
 	open_inventory()
 	
-	# Start healing (optional, just for flavor)
-	start_healing()
+	GameManager.set_player_hp(GameManager.get_player_max_hp())
 
 func play_sit_animation() -> void:
 	"""Play the sit animation on the player"""
-	if player == null or not player.has_method("play_animation"):
+	if player == null:
+		return
+
+	if player.has_method("sit_at_altar"):
+		player.call("sit_at_altar")
 		return
 	
 	# If player has AnimatedSprite2D, play sit animation
@@ -77,6 +80,8 @@ func open_inventory() -> void:
 		current_inventory_ui.queue_free()
 	
 	current_inventory_ui = inventory_ui_scene.instantiate()
+	current_inventory_ui.process_mode = Node.PROCESS_MODE_ALWAYS
+	current_inventory_ui.tree_exited.connect(_on_inventory_closed)
 	get_tree().root.add_child(current_inventory_ui)
 	
 	# Tell inventory we're at an altar (enables equip/unequip)
@@ -85,6 +90,13 @@ func open_inventory() -> void:
 	
 	# Pause the game
 	get_tree().paused = true
+
+func _on_inventory_closed() -> void:
+	current_inventory_ui = null
+	stop_sitting()
+	if player != null:
+		interact_prompt.visible = true
+		show_sit_prompt()
 
 func start_healing() -> void:
 	"""Heal the player while sitting"""
@@ -114,6 +126,10 @@ func heal_player(amount: float) -> void:
 func stop_sitting() -> void:
 	"""Player stops sitting"""
 	is_player_sitting = false
+
+	if player and player.has_method("stop_sitting_at_altar"):
+		player.call("stop_sitting_at_altar")
+		return
 	
 	# Resume normal animation
 	if player and player.has_node("AnimatedSprite2D"):
@@ -140,6 +156,8 @@ func save_game() -> void:
 	# Save position and level
 	save_data.position = player.global_position
 	save_data.level = get_tree().current_scene.name
+	save_data.level_path = get_tree().current_scene.scene_file_path
+	save_data.saved_at = Time.get_datetime_string_from_system(false, true)
 	
 	# Save charm inventory
 	var charm_inventory = GameManager.get_charm_inventory()
@@ -154,7 +172,7 @@ func save_game() -> void:
 	save_data.equipped_charm_ids = charm_inventory.equipped_charm_ids.duplicate()
 	
 	# Save to file using ResourceSaver
-	var error = ResourceSaver.save(save_data, "user://autosave.tres")
+	var error = ResourceSaver.save(save_data, GameManager.get_save_path())
 	if error == OK:
 		print("Game autosaved successfully!")
 	else:

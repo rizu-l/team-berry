@@ -25,7 +25,7 @@ alignment = 1
 [node name="TitleLabel" type="Label" parent="VBoxContainer" unique_id=836950349]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_ij7vn")
-theme_override_font_sizes/font_size = 96
+theme_override_font_sizes/font_size = 128
 text = "GAME NAME"
 horizontal_alignment = 1
 
@@ -35,8 +35,17 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 0.34117648, 1)
 theme_override_fonts/font = ExtResource("2_ij7vn")
-theme_override_font_sizes/font_size = 32
-text = "Start Game"
+theme_override_font_sizes/font_size = 64
+text = "New Game"
+
+[node name="LoadButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 0.34117648, 1)
+theme_override_fonts/font = ExtResource("2_ij7vn")
+theme_override_font_sizes/font_size = 64
+text = "Load Game"
 
 [node name="SettingsButton" type="Button" parent="VBoxContainer" unique_id=1843902409]
 custom_minimum_size = Vector2(200, 50)
@@ -44,7 +53,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 0.34117648, 1)
 theme_override_fonts/font = ExtResource("2_ij7vn")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 64
 text = "Settings"
 
 [node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=1370024762]
@@ -53,5 +62,5 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 0.34117648, 1)
 theme_override_fonts/font = ExtResource("2_ij7vn")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 64
 text = "Quit Game"

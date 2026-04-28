@@ -8,7 +8,9 @@ var unlocked_charms: Dictionary = {}
 var equipped_charm_ids: Array = []
 
 func _init():
-	pass
+	unlock_charm(CharmData.charm_list.VITALITY_CHARM)
+	unlock_charm(CharmData.charm_list.SHARP_EDGE)
+	unlock_charm(CharmData.charm_list.MYSTIC_WELL)
 
 func unlock_charm(charm_id) -> bool:
 	"""Unlock a charm"""
@@ -92,3 +94,44 @@ func can_equip_charm(charm_id) -> bool:
 		return false
 	
 	return true
+
+func get_charm(charm_id) -> Dictionary:
+	if not CharmData.INFO.has(charm_id):
+		return {}
+
+	var charm_info: Dictionary = CharmData.INFO[charm_id]
+	return {
+		"charm_id": charm_id,
+		"display_name": charm_info.get("name", "Unknown Charm"),
+		"description": charm_info.get("description", ""),
+		"icon": charm_info.get("icon", null),
+		"stat_buffs": charm_info.get("stat_buffs", {}),
+		"effect_text": get_effect_text(charm_info.get("stat_buffs", {})),
+		"is_unlocked": is_charm_unlocked(charm_id),
+		"is_equipped": is_charm_equipped(charm_id),
+	}
+
+func get_effect_text(stat_buffs: Dictionary) -> String:
+	var effects: Array[String] = []
+	for stat in stat_buffs.keys():
+		var stat_name := String(stat).capitalize().replace("_", " ")
+		var value = stat_buffs[stat]
+		if value is float:
+			effects.append("%s +%.1f" % [stat_name, value])
+		else:
+			effects.append("%s +%d" % [stat_name, int(value)])
+	return ", ".join(effects)
+
+func get_all_charms() -> Array:
+	var charms: Array = []
+	for charm_id in CharmData.INFO.keys():
+		charms.append(get_charm(charm_id))
+	return charms
+
+func get_equipped_charm_details() -> Array:
+	var charms: Array = []
+	for charm_id in equipped_charm_ids:
+		var charm := get_charm(charm_id)
+		if not charm.is_empty():
+			charms.append(charm)
+	return charms

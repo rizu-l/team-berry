@@ -65,30 +65,38 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
-"speed": 5.0
+"speed": 10.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r38o8"]
 size = Vector2(32, 32)
 
 [node name="Altar" type="Area2D" unique_id=289189091]
+collision_mask = 2
 script = ExtResource("1_6dnm1")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=1958381883]
 position = Vector2(0, -16)
 sprite_frames = SubResource("SpriteFrames_r38o8")
-frame = 3
-frame_progress = 0.24089333
+frame_progress = 0.6175062
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=101827859]
 position = Vector2(0, -16)
 shape = SubResource("RectangleShape2D_r38o8")
 
-[node name="InteractPrompt" type="Label" parent="." unique_id=474326979]
-visible = false
-offset_left = -55.0
-offset_top = -55.0
-offset_right = 55.0
-offset_bottom = -32.0
+[node name="PromptLayer" type="CanvasLayer" parent="." unique_id=1308052356]
+layer = 10
+
+[node name="InteractPrompt" type="Label" parent="PromptLayer" unique_id=474326979]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -173.0
+offset_top = 234.0
+offset_right = 207.0
+offset_bottom = 274.0
+grow_horizontal = 2
 theme_override_fonts/font = ExtResource("3_qe24g")
-text = "Press  E  to rest"
+theme_override_font_sizes/font_size = 64
+text = "Press  F  to rest"
+horizontal_alignment = 1

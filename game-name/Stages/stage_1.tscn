@@ -3,13 +3,27 @@
 [ext_resource type="PackedScene" uid="uid://ch4awp27uhxxo" path="res://tester.tscn" id="1_e80nj"]
 [ext_resource type="PackedScene" uid="uid://baid383s1rnt0" path="res://Objects/Altar.tscn" id="2_kelb3"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_kelb3"]
+font_size = 48
+outline_size = 3
+outline_color = Color(0.4369242, 0.94010353, 0.78408355, 1)
+shadow_size = 7
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_rk43g"]
+font_size = 48
+outline_size = 3
+outline_color = Color(0.74006665, 0.1650118, 0.6546067, 1)
+shadow_size = 11
+shadow_color = Color(0, 0, 0, 1)
+
 [node name="Stage1" unique_id=860170224 instance=ExtResource("1_e80nj")]
 
 [node name="Altar" parent="TileMapLayer" index="0" unique_id=289189091 instance=ExtResource("2_kelb3")]
 position = Vector2(800, -224)
 
 [node name="CharacterBody2D" parent="." index="1"]
-position = Vector2(14, 1)
+position = Vector2(1196, 470)
 
 [node name="AbilityUnlock" parent="." index="2"]
 position = Vector2(1368, 545)
@@ -21,15 +35,30 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_use_anchors_ = true
 
 [node name="Label" parent="HUD/HPUI" index="1"]
+label_settings = SubResource("LabelSettings_kelb3")
 metadata/_edit_use_anchors_ = true
 
 [node name="MPUI" parent="HUD" index="1"]
+anchors_preset = -1
+anchor_left = -0.014756944
+anchor_top = -0.030864198
+anchor_right = 0.010416667
+anchor_bottom = 0.009259259
+offset_left = 240.0
+offset_top = 67.0
 metadata/_edit_use_anchors_ = true
 
 [node name="TextureProgressBar" parent="HUD/MPUI" index="0"]
 metadata/_edit_use_anchors_ = true
 
 [node name="Label" parent="HUD/MPUI" index="1"]
+anchors_preset = -1
+anchor_left = 0.28888893
+anchor_top = -0.08173077
+anchor_right = 0.46813428
+anchor_bottom = 0.41826922
+text = "100"
+label_settings = SubResource("LabelSettings_rk43g")
 metadata/_edit_use_anchors_ = true
 
 [node name="BossUI" parent="HUD" index="2"]

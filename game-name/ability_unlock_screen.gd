@@ -13,7 +13,13 @@ func _ready() -> void:
 	DescriptionLabel.text = AbilityData.INFO[ability_to_show]["description"]
 	IconIMGNode.texture = AbilityData.INFO[ability_to_show]["icon"]
 	
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_pressed() and not event.is_echo():
+		close()
 
 func _on_close_button_pressed() -> void:
+	close()
+
+func close() -> void:
 	get_tree().paused = false
 	queue_free()

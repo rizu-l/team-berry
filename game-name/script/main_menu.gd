@@ -3,15 +3,17 @@ extends Control
 
 @onready var menu_container = $VBoxContainer
 @onready var start_button = $VBoxContainer/StartButton
+@onready var load_button = $VBoxContainer/LoadButton
 @onready var settings_button = $VBoxContainer/SettingsButton
 @onready var quit_button = $VBoxContainer/QuitButton
 
 const settings_scene = preload("res://menus/settings_menu.tscn")
-const game_scene = "res://Stages/stage_1.tscn"  # Change this to your first level
+const save_slot_scene = preload("res://menus/save_slot_menu.tscn")
 
 func _ready():
 	# Connect button signals
 	start_button.pressed.connect(_on_start_pressed)
+	load_button.pressed.connect(_on_load_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
 	
@@ -20,7 +22,7 @@ func _ready():
 
 func animate_menu_in():
 	"""Animate the menu buttons in on startup"""
-	var buttons = [start_button, settings_button, quit_button]
+	var buttons = [start_button, load_button, settings_button, quit_button]
 	for i in range(buttons.size()):
 		buttons[i].modulate.a = 0
 		await get_tree().create_timer(i * 0.15).timeout
@@ -28,9 +30,16 @@ func animate_menu_in():
 		tween.tween_property(buttons[i], "modulate:a", 1.0, 0.3)
 
 func _on_start_pressed():
-	print("Starting game...")
-	# For now, just start a new game
-	get_tree().change_scene_to_file(game_scene)
+	open_save_slots(false)
+
+func _on_load_pressed():
+	open_save_slots(true)
+
+func open_save_slots(load_mode: bool) -> void:
+	var save_slot_menu = save_slot_scene.instantiate()
+	get_tree().root.add_child(save_slot_menu)
+	if save_slot_menu.has_method("setup"):
+		save_slot_menu.setup(load_mode)
 
 func _on_settings_pressed():
 	print("Opening settings...")

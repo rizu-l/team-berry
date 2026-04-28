@@ -12,6 +12,9 @@ class_name SaveData
 # Position and level
 @export var position: Vector2 = Vector2.ZERO
 @export var level: String = "Level1"
+@export var level_path: String = "res://Stages/stage_1.tscn"
+@export var saved_at: String = ""
+@export var play_time_seconds: float = 0.0
 
 # Charm inventory - track unlocked and equipped charms
 @export var unlocked_charms: Array = []  # Array of unlocked charm enum values

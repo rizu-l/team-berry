@@ -1,12 +1,17 @@
-extends Control
+extends CanvasLayer
 class_name InventoryUI
 
-@onready var stat_label = $VBoxContainer/StatsPanel/StatsLabel
-@onready var equipped_container = $VBoxContainer/EquippedCharmsPanel/VBoxContainer
-@onready var available_charms_container = $VBoxContainer/AvailableCharmsPanel/VBoxContainer/ScrollContainer/VBoxContainer
-@onready var tooltip = $Tooltip
-@onready var close_button = $VBoxContainer/CloseButton
-@onready var save_button = $VBoxContainer/SaveButton
+const CUSTOM_FONT := preload("res://icons/ARCADECLASSIC.TTF")
+const SLOT_SIZE := Vector2(560, 92)
+const CHARM_BUTTON_SIZE := Vector2(580, 86)
+
+@onready var root_control: Control = $Root
+@onready var stat_label: Label = $Root/Panel/VBoxContainer/Content/StatsPanel/StatsLabel
+@onready var equipped_container: VBoxContainer = $Root/Panel/VBoxContainer/Content/RightColumn/EquippedCharmsPanel/EquippedList
+@onready var available_charms_container: VBoxContainer = $Root/Panel/VBoxContainer/Content/RightColumn/AvailableCharmsPanel/ScrollContainer/AvailableList
+@onready var tooltip: Label = $Root/Panel/VBoxContainer/Tooltip
+@onready var close_button: Button = $Root/Panel/VBoxContainer/Buttons/CloseButton
+@onready var save_button: Button = $Root/Panel/VBoxContainer/Buttons/SaveButton
 
 var charm_inventory: CharmInventory
 var is_at_altar: bool = false
@@ -14,6 +19,7 @@ var charm_slot_buttons: Array = []
 var charm_list_buttons: Array = []
 
 func _ready():
+	root_control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	close_button.pressed.connect(_on_close_pressed)
 	save_button.pressed.connect(_on_save_pressed)
 	
@@ -33,6 +39,10 @@ func _ready():
 	update_stats_display()
 	update_equipped_display()
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("inventory") or event.is_action_pressed("ui_cancel"):
+		_on_close_pressed()
+
 func create_charm_slots() -> void:
 	"""Create 4 charm slot buttons for equipped charms"""
 	# Clear existing
@@ -43,8 +53,12 @@ func create_charm_slots() -> void:
 	
 	for i in range(4):
 		var slot_button = Button.new()
-		slot_button.custom_min_size = Vector2(150, 50)
-		slot_button.text = "[Empty Slot %d]" % (i + 1)
+		slot_button.custom_minimum_size = SLOT_SIZE
+		slot_button.add_theme_font_override("font", CUSTOM_FONT)
+		slot_button.add_theme_font_size_override("font_size", 24)
+		slot_button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		slot_button.expand_icon = true
+		slot_button.text = "Empty Slot %d" % (i + 1)
 		slot_button.pressed.connect(_on_charm_slot_pressed.bindv([i]))
 		slot_button.mouse_entered.connect(_on_charm_slot_hover.bindv([i]))
 		slot_button.mouse_exited.connect(_on_tooltip_hide)
@@ -64,18 +78,19 @@ func create_charm_list() -> void:
 	
 	for charm in all_charms:
 		var charm_button = Button.new()
-		charm_button.custom_min_size = Vector2(200, 40)
+		charm_button.custom_minimum_size = CHARM_BUTTON_SIZE
+		charm_button.add_theme_font_override("font", CUSTOM_FONT)
+		charm_button.add_theme_font_size_override("font_size", 24)
+		charm_button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		charm_button.expand_icon = true
+		charm_button.icon = charm["icon"]
 		
-		# Show charm name with lock icon if locked
-		if charm.is_unlocked:
-			charm_button.text = charm.display_name
-			if charm.is_equipped:
-				charm_button.text += " [EQUIPPED]"
-		else:
-			charm_button.text = "? - Unknown Charm"
+		charm_button.text = get_charm_button_text(charm)
+		if not charm["is_unlocked"]:
+			charm_button.modulate = Color(0.45, 0.45, 0.45, 1.0)
 		
-		charm_button.pressed.connect(_on_charm_clicked.bindv([charm.charm_id]))
-		charm_button.mouse_entered.connect(_on_charm_hover.bindv([charm.charm_id]))
+		charm_button.pressed.connect(_on_charm_clicked.bindv([charm["charm_id"]]))
+		charm_button.mouse_entered.connect(_on_charm_hover.bindv([charm["charm_id"]]))
 		charm_button.mouse_exited.connect(_on_tooltip_hide)
 		
 		available_charms_container.add_child(charm_button)
@@ -107,29 +122,40 @@ func update_stats_display() -> void:
 
 func update_equipped_display() -> void:
 	"""Update the equipped charm slots"""
-	var equipped = charm_inventory.get_equipped_charms()
+	var equipped = charm_inventory.get_equipped_charm_details()
 	
 	for i in range(4):
 		if i < equipped.size():
-			charm_slot_buttons[i].text = equipped[i].display_name
+			charm_slot_buttons[i].text = "%s\n%s" % [
+				equipped[i]["display_name"],
+				equipped[i]["effect_text"],
+			]
+			charm_slot_buttons[i].icon = equipped[i]["icon"]
 		else:
-			charm_slot_buttons[i].text = "[Empty Slot %d]" % (i + 1)
+			charm_slot_buttons[i].text = "Empty Slot %d" % (i + 1)
+			charm_slot_buttons[i].icon = null
 
-func _on_charm_clicked(charm_id: String) -> void:
+func _on_charm_clicked(charm_id) -> void:
 	"""Handle charm click"""
 	var charm = charm_inventory.get_charm(charm_id)
 	
-	if not charm:
+	if charm.is_empty():
 		return
 	
-	if not charm.is_unlocked:
+	if not charm["is_unlocked"]:
+		show_tooltip(charm["display_name"], "Locked\n%s" % charm["effect_text"])
 		return
 	
 	if not is_at_altar:
+		show_tooltip(charm["display_name"], "Rest at an altar to equip charms.")
 		return
 	
-	# Toggle equip/unequip
-	charm_inventory.toggle_charm(charm_id)
+	if charm["is_equipped"]:
+		charm_inventory.unequip_charm(charm_id)
+	else:
+		if not charm_inventory.equip_charm(charm_id):
+			show_tooltip(charm["display_name"], "No empty charm slots.")
+			return
 	
 	# Update display
 	update_equipped_display()
@@ -139,13 +165,14 @@ func _on_charm_clicked(charm_id: String) -> void:
 func _on_charm_slot_pressed(slot_index: int) -> void:
 	"""Handle equipped charm slot click"""
 	if not is_at_altar:
+		show_tooltip("Charm Slot", "Rest at an altar to unequip charms.")
 		return
 	
 	var equipped = charm_inventory.get_equipped_charms()
 	
 	if slot_index < equipped.size():
 		# Unequip this charm
-		var charm_id = equipped[slot_index].charm_id
+		var charm_id = equipped[slot_index]
 		charm_inventory.unequip_charm(charm_id)
 		
 		# Update display
@@ -155,23 +182,36 @@ func _on_charm_slot_pressed(slot_index: int) -> void:
 
 func _on_charm_slot_hover(slot_index: int) -> void:
 	"""Show tooltip for equipped charm"""
-	var equipped = charm_inventory.get_equipped_charms()
+	var equipped = charm_inventory.get_equipped_charm_details()
 	
 	if slot_index < equipped.size():
 		var charm = equipped[slot_index]
-		show_tooltip(charm.display_name, charm.description)
+		show_tooltip(charm["display_name"], "%s\n%s" % [charm["description"], charm["effect_text"]])
 
-func _on_charm_hover(charm_id: String) -> void:
+func _on_charm_hover(charm_id) -> void:
 	"""Show tooltip for charm in list"""
 	var charm = charm_inventory.get_charm(charm_id)
 	
-	if charm:
-		show_tooltip(charm.display_name, charm.description)
+	if not charm.is_empty():
+		show_tooltip(charm["display_name"], "%s\n%s" % [charm["description"], charm["effect_text"]])
 
-func show_tooltip(name: String, description: String) -> void:
+func show_tooltip(charm_name: String, description: String) -> void:
 	"""Display tooltip"""
-	tooltip.text = "%s\n%s" % [name, description]
+	tooltip.text = "%s\n%s" % [charm_name, description]
 	tooltip.visible = true
+
+func get_charm_button_text(charm: Dictionary) -> String:
+	var status := ""
+	if charm["is_equipped"]:
+		status = "  [Equipped]"
+	elif not charm["is_unlocked"]:
+		status = "  [Locked]"
+
+	return "%s%s\n%s" % [
+		charm["display_name"],
+		status,
+		charm["effect_text"],
+	]
 
 func _on_tooltip_hide() -> void:
 	"""Hide tooltip"""
@@ -192,7 +232,7 @@ func _on_save_pressed() -> void:
 	if is_at_altar:
 		save_game()
 		show_tooltip("Saved!", "Game saved successfully")
-		await get_tree().create_timer(2.0).timeout
+		await get_tree().create_timer(2.0, true).timeout
 		get_tree().paused = false
 		queue_free()
 
@@ -217,19 +257,19 @@ func save_game() -> void:
 	# Save position and level
 	save_data.position = player.global_position
 	save_data.level = get_tree().current_scene.name
+	save_data.level_path = get_tree().current_scene.scene_file_path
+	save_data.saved_at = Time.get_datetime_string_from_system(false, true)
 	
 	# Save charm inventory
+	var unlocked_charms_array = []
+	for charm_id in charm_inventory.unlocked_charms.keys():
+		if charm_inventory.unlocked_charms[charm_id]:
+			unlocked_charms_array.append(charm_id)
+	save_data.unlocked_charms = unlocked_charms_array
 	save_data.equipped_charm_ids = charm_inventory.equipped_charm_ids.duplicate()
 	
-	for charm_id in charm_inventory.charms.keys():
-		var charm = charm_inventory.charms[charm_id]
-		save_data.charms[charm_id] = {
-			"is_unlocked": charm.is_unlocked,
-			"is_equipped": charm.is_equipped
-		}
-	
 	# Save to file using ResourceSaver
-	var error = ResourceSaver.save(save_data, "user://autosave.tres")
+	var error = ResourceSaver.save(save_data, GameManager.get_save_path())
 	if error == OK:
 		print("Game saved successfully!")
 	else:

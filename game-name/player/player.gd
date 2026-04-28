@@ -8,6 +8,7 @@ extends CharacterBody2D
 @onready var respawn_probe_area: Area2D = get_node_or_null("Area2D") as Area2D
 
 const ATTACK_ANIMATIONS := [&"Attack1", &"Attack2", &"Attack3"]
+const INVENTORY_UI_SCENE := preload("res://menus/InventoryUI.tscn")
 const WALK_SPEED = 100.0
 const SPRINT_SPEED = 300.0
 const JUMP_VELOCITY = -400.0
@@ -33,6 +34,8 @@ var attack_hitbox_shapes = []
 var attack_hitbox_base_positions: Array[Vector2] = []
 var attack_hitbox_shape_base_positions: Array[Vector2] = []
 var last_safe_ground_position = Vector2.ZERO
+var current_inventory_ui: Node = null
+var is_sitting_at_altar = false
 enum State { Idle, Walk, Run, Jump, Fall, DoubleJump, Blink, Dash, Sit}
 
 @export var starting_max_hp: int = 100
@@ -128,9 +131,18 @@ func _ready():
 	currentState = State.Idle
 	last_safe_ground_position = global_position
 	add_to_group("player")
+	GameManager.apply_pending_player_position(self)
 	player_animations()
 
 func _physics_process(delta: float) -> void:
+	if Input.is_action_just_pressed("inventory"):
+		open_inventory(false)
+
+	if is_sitting_at_altar:
+		velocity = Vector2.ZERO
+		player_animations()
+		return
+
 	check_void_fall()
 	update_respawn_invulnerability(delta)
 
@@ -282,7 +294,7 @@ func update_attack_physics(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-func player_idle(delta):
+func player_idle(_delta):
 	if is_on_floor() and not is_attacking:
 		currentState = State.Idle
 
@@ -296,7 +308,7 @@ func player_attack() -> void:
 	
 	perform_attack_combo()
 
-func player_run(delta):
+func player_run(_delta):
 	if damage_knockback_lock_remaining > 0.0:
 		return
 
@@ -370,7 +382,7 @@ func update_dash(delta: float) -> void:
 		set_dash_particles_active(false)
 		currentState = State.Idle if is_on_floor() else State.Fall
 		
-func player_jump(delta):
+func player_jump(_delta):
 	if damage_knockback_lock_remaining > 0.0:
 		if Input.is_action_just_released("jump") and velocity.y < 0:
 			velocity.y *= 0.3
@@ -531,6 +543,35 @@ func apply_knockback(knockback_velocity: Vector2) -> void:
 
 func heal(amount: int) -> void:
 	hp += amount
+
+func sit_at_altar() -> void:
+	cancel_attack()
+	is_dashing = false
+	is_blinking = false
+	velocity = Vector2.ZERO
+	is_sitting_at_altar = true
+	currentState = State.Sit
+	player_animations()
+
+func stop_sitting_at_altar() -> void:
+	is_sitting_at_altar = false
+	currentState = State.Idle
+	player_animations()
+
+func open_inventory(at_altar: bool = false) -> void:
+	if current_inventory_ui != null and is_instance_valid(current_inventory_ui):
+		return
+
+	current_inventory_ui = INVENTORY_UI_SCENE.instantiate()
+	current_inventory_ui.process_mode = Node.PROCESS_MODE_ALWAYS
+	current_inventory_ui.tree_exited.connect(_on_inventory_closed)
+	get_tree().root.add_child(current_inventory_ui)
+	if current_inventory_ui.has_method("set_at_altar"):
+		current_inventory_ui.set_at_altar(at_altar)
+	get_tree().paused = true
+
+func _on_inventory_closed() -> void:
+	current_inventory_ui = null
 
 func disable_all_attack_hitboxes() -> void:
 	for shape in attack_hitbox_shapes:
