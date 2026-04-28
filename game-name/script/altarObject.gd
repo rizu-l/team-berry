@@ -1,28 +1,35 @@
 extends Area2D
-# Attach to your altar object
+# Altar that player can sit at to rest, heal, and save
 
-@export var heal_amount_per_second: float = 20.0
-@onready var interact_prompt: Label = $InteractPrompt
+@export var heal_amount_per_second: float = 10.0
+@export var sit_animation_name: String = "Sit"  # Animation name for sitting
 
 var player: Node = null
 var is_player_sitting: bool = false
 var heal_timer: float = 0.0
+var current_inventory_ui: Control = null
+
+@onready var interact_prompt: Label = $InteractPrompt
+
+const inventory_ui_scene = preload("res://menus/InventoryUI.tscn")
 
 func _ready():
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	interact_prompt.visible = false
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		player = body
-		interact_prompt.visible = true  # Show the label
+		interact_prompt.visible = true
 		show_sit_prompt()
 
 func _on_body_exited(body: Node2D) -> void:
 	if body == player:
 		player = null
 		is_player_sitting = false
-		interact_prompt.visible = false  # Hide the label
+		interact_prompt.visible = false
+		stop_sitting()
 
 func show_sit_prompt() -> void:
 	"""Wait for player to press E to sit"""
@@ -34,19 +41,50 @@ func show_sit_prompt() -> void:
 		await get_tree().process_frame
 
 func sit_at_altar() -> void:
-	"""Player sits at altar"""
+	"""Player sits at altar - autosave immediately, then play animation and open inventory"""
 	if player == null:
 		return
 	
 	is_player_sitting = true
-	hide_altar_message()
-	show_altar_message("Resting...", 0.0)  # Message stays while resting
+	interact_prompt.visible = false
 	
-	# Save immediately
+	# AUTOSAVE IMMEDIATELY
 	save_game()
 	
-	# Start healing
+	# Play sit animation
+	play_sit_animation()
+	
+	# Open inventory
+	open_inventory()
+	
+	# Start healing (optional, just for flavor)
 	start_healing()
+
+func play_sit_animation() -> void:
+	"""Play the sit animation on the player"""
+	if player == null or not player.has_method("play_animation"):
+		return
+	
+	# If player has AnimatedSprite2D, play sit animation
+	if player.has_node("AnimatedSprite2D"):
+		var sprite = player.get_node("AnimatedSprite2D")
+		if sprite and sprite.sprite_frames.has_animation(sit_animation_name):
+			sprite.play(sit_animation_name)
+
+func open_inventory() -> void:
+	"""Open the inventory UI"""
+	if current_inventory_ui:
+		current_inventory_ui.queue_free()
+	
+	current_inventory_ui = inventory_ui_scene.instantiate()
+	get_tree().root.add_child(current_inventory_ui)
+	
+	# Tell inventory we're at an altar (enables equip/unequip)
+	if current_inventory_ui.has_method("set_at_altar"):
+		current_inventory_ui.set_at_altar(true)
+	
+	# Pause the game
+	get_tree().paused = true
 
 func start_healing() -> void:
 	"""Heal the player while sitting"""
@@ -76,73 +114,48 @@ func heal_player(amount: float) -> void:
 func stop_sitting() -> void:
 	"""Player stops sitting"""
 	is_player_sitting = false
-	show_altar_message("Fully healed!")
+	
+	# Resume normal animation
+	if player and player.has_node("AnimatedSprite2D"):
+		var sprite = player.get_node("AnimatedSprite2D")
+		if sprite:
+			sprite.play("Idle")
 
 func save_game() -> void:
-	"""Save the game state"""
+	"""Save the game state using Godot Resources"""
 	if player == null:
 		return
 	
-	# Prepare save data using GameManager
-	var save_data = {
-		"position": player.global_position,
-		"hp": GameManager.get_player_hp(),
-		"max_hp": GameManager.get_player_max_hp(),
-		"mp": GameManager.get_player_mp(),
-		"max_mp": GameManager.get_player_max_mp(),
-		"attack": GameManager.get_player_attack(),
-		"unlocked_abilities": GameManager.get_unlocked_abilities(),
-		"level": get_tree().current_scene.name
-	}
+	# Create SaveData resource
+	var save_data = SaveData.new()
 	
-	# Save to file
-	var save_file = FileAccess.open("user://autosave.save", FileAccess.WRITE)
-	if save_file:
-		save_file.store_var(save_data)
-
-func show_altar_message(message: String, duration: float = 3.0) -> void:
-	"""Show a fading message on screen"""
-	var label = Label.new()
-	label.text = message
-	label.add_theme_font_size_override("font_size", 48)
+	# Save player stats from GameManager
+	save_data.hp = GameManager.get_player_hp()
+	save_data.max_hp = GameManager.get_player_max_hp()
+	save_data.mp = GameManager.get_player_mp()
+	save_data.max_mp = GameManager.get_player_max_mp()
+	save_data.attack = GameManager.get_player_attack()
+	save_data.unlocked_abilities = GameManager.get_unlocked_abilities().duplicate()
 	
-	# Position at center top of screen
-	label.anchor_left = 0.5
-	label.anchor_top = 0.2
-	label.anchor_right = 0.5
-	label.anchor_bottom = 0.2
-	label.offset_x = 0
-	label.offset_y = 0
+	# Save position and level
+	save_data.position = player.global_position
+	save_data.level = get_tree().current_scene.name
 	
-	# Add styling for visibility
-	label.add_theme_color_override("font_color", Color.WHITE)
-	label.add_to_group("altar_message")
+	# Save charm inventory
+	var charm_inventory = GameManager.get_charm_inventory()
 	
-	# Add to CanvasLayer so it's always on top
-	var canvas_layer = CanvasLayer.new()
-	canvas_layer.layer = 100
-	get_tree().root.add_child(canvas_layer)
-	canvas_layer.add_child(label)
+	# Save unlocked charms as array of keys (like abilities)
+	var unlocked_charms_array = []
+	for charm_id in charm_inventory.unlocked_charms.keys():
+		if charm_inventory.unlocked_charms[charm_id]:
+			unlocked_charms_array.append(charm_id)
 	
-	# Start invisible
-	label.modulate.a = 0.0
+	save_data.unlocked_charms = unlocked_charms_array
+	save_data.equipped_charm_ids = charm_inventory.equipped_charm_ids.duplicate()
 	
-	# Fade in
-	var tween = create_tween()
-	tween.tween_property(label, "modulate:a", 1.0, 0.3)
-	
-	if duration > 0:
-		# Wait and fade out
-		await get_tree().create_timer(duration).timeout
-		if label and not label.is_queued_for_deletion():
-			var tween2 = create_tween()
-			tween2.tween_property(label, "modulate:a", 0.0, 0.5)
-			await tween2.finished
-			label.queue_free()
-			canvas_layer.queue_free()
-
-func hide_altar_message() -> void:
-	"""Hide all altar messages"""
-	for msg in get_tree().get_nodes_in_group("altar_message"):
-		if msg:
-			msg.queue_free()
+	# Save to file using ResourceSaver
+	var error = ResourceSaver.save(save_data, "user://autosave.tres")
+	if error == OK:
+		print("Game autosaved successfully!")
+	else:
+		print("Error saving game: ", error)

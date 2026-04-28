@@ -4,8 +4,8 @@ class_name CharmInventory
 const MAX_EQUIPPED = 4
 
 # Track unlocked and equipped charms by their enum ID
-var unlocked_charms: Dictionary = {}  # charm_id -> true/false
-var equipped_charm_ids: Array = []  # [charm_id, charm_id, ...]
+var unlocked_charms: Dictionary = {}
+var equipped_charm_ids: Array = []
 
 func _init():
 	pass
@@ -19,11 +19,9 @@ func unlock_charm(charm_id) -> bool:
 	return true
 
 func is_charm_unlocked(charm_id) -> bool:
-	"""Check if charm is unlocked"""
 	return unlocked_charms.get(charm_id, false)
 
 func equip_charm(charm_id) -> bool:
-	"""Equip a charm (if space available and unlocked)"""
 	if not is_charm_unlocked(charm_id):
 		return false
 	

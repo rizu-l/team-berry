@@ -15,16 +15,10 @@ func _ready():
 	
 	# Initialize charm inventory
 	charm_inventory = CharmInventory.new()
-	
-	# Add all charm definitions
-	var all_charms = CharmDefinitions.create_all_charms()
-	for charm in all_charms:
-		charm_inventory.add_charm(charm)
 
 func reset_player_data() -> void:
 	player_data = DEFAULT_PLAYER_DATA.duplicate(true)
 
-# ============ PLAYER STATS ============
 
 func get_player_hp() -> int:
 	return player_data["hp"]
@@ -69,11 +63,13 @@ func unlock_ability(ability) -> void:
 
 # ============ CHARM SYSTEM ============
 
-func get_charm_inventory() -> CharmInventory:
-	"""Get the charm inventory"""
-	return charm_inventory
+func is_charm_unlocked(charm_id) -> bool:
+	"""Check if a charm is unlocked"""
+	if charm_inventory:
+		return charm_inventory.is_charm_unlocked(charm_id)
+	return false
 
-func unlock_charm(charm_id: String) -> void:
+func unlock_charm(charm_id) -> void:
 	"""Unlock a charm"""
 	if charm_inventory:
 		charm_inventory.unlock_charm(charm_id)
@@ -104,63 +100,42 @@ func get_charm_buffs() -> Dictionary:
 
 # ============ SAVE/LOAD ============
 
-func get_save_data() -> Dictionary:
-	"""Get current game state as save data"""
-	var save_data = {
-		"player": {
-			"hp": player_data["hp"],
-			"max_hp": player_data["max_hp"],
-			"mp": player_data["mp"],
-			"max_mp": player_data["max_mp"],
-			"attack": player_data["attack"],
-			"unlocked_abilities": player_data["unlocked_abilities"].keys()
-		},
-		"charm_inventory": {
-			"equipped_charm_ids": charm_inventory.equipped_charm_ids,
-			"charms": {}
-		}
-	}
+func load_game() -> bool:
+	"""Load game state from SaveData resource file"""
+	var save_path = "user://autosave.tres"
 	
-	# Save charm states
-	for charm_id in charm_inventory.charms.keys():
-		var charm = charm_inventory.charms[charm_id]
-		save_data["charm_inventory"]["charms"][charm_id] = {
-			"is_unlocked": charm.is_unlocked,
-			"is_equipped": charm.is_equipped
-		}
+	# Check if save file exists
+	if not ResourceLoader.exists(save_path):
+		print("No save file found")
+		return false
 	
-	return save_data
-
-func load_game(save_data: Dictionary) -> void:
-	"""Load game state from save file"""
-	if save_data.has("player"):
-		var player_info = save_data["player"]
-		player_data["hp"] = player_info.get("hp", 100)
-		player_data["max_hp"] = player_info.get("max_hp", 100)
-		player_data["mp"] = player_info.get("mp", 100.0)
-		player_data["max_mp"] = player_info.get("max_mp", 100.0)
-		player_data["attack"] = player_info.get("attack", 10)
-		
-		# Load abilities
-		var abilities = player_info.get("unlocked_abilities", [])
-		for ability in abilities:
-			unlock_ability(ability)
+	# Load the SaveData resource
+	var save_data = ResourceLoader.load(save_path) as SaveData
+	if save_data == null:
+		print("Failed to load save file")
+		return false
+	
+	# Load player stats
+	player_data["hp"] = save_data.hp
+	player_data["max_hp"] = save_data.max_hp
+	player_data["mp"] = save_data.mp
+	player_data["max_mp"] = save_data.max_mp
+	player_data["attack"] = save_data.attack
+	player_data["unlocked_abilities"] = save_data.unlocked_abilities.duplicate()
 	
 	# Load charm inventory
-	if save_data.has("charm_inventory") and charm_inventory:
-		load_charm_inventory(save_data["charm_inventory"])
-
-func load_charm_inventory(charm_data: Dictionary) -> void:
-	"""Load charm inventory from save data"""
-	# Load charm states
-	if charm_data.has("charms"):
-		for charm_id in charm_data["charms"].keys():
-			var charm = charm_inventory.get_charm(charm_id)
-			if charm:
-				var saved_state = charm_data["charms"][charm_id]
-				charm.is_unlocked = saved_state.get("is_unlocked", false)
-				charm.is_equipped = saved_state.get("is_equipped", false)
+	if charm_inventory:
+		load_charm_inventory(save_data)
 	
-	# Load equipped charms list
-	if charm_data.has("equipped_charm_ids"):
-		charm_inventory.equipped_charm_ids = charm_data["equipped_charm_ids"]
+	print("Game loaded successfully from: ", save_path)
+	return true
+
+func load_charm_inventory(save_data: SaveData) -> void:
+	"""Load charm inventory from SaveData (mirrors ability loading pattern)"""
+	# Load unlocked charms (loop array and call unlock_charm)
+	var unlocked_charms_array = save_data.unlocked_charms
+	for charm_id in unlocked_charms_array:
+		unlock_charm(charm_id)
+	
+	# Load equipped charms
+	charm_inventory.equipped_charm_ids = save_data.equipped_charm_ids.duplicate()
