@@ -530,6 +530,12 @@ size = Vector2(63, 34)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_00gdi"]
 size = Vector2(32, 45)
 
+[node name="Player" type="CharacterBody2D" unique_id=655446743]
+collision_layer = 7
+collision_mask = 3
+script = ExtResource("1_fui21")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1284957065]
 [node name="Player" type="CharacterBody2D" unique_id=746612115]
 collision_layer = 6
 collision_mask = 3
@@ -541,6 +547,11 @@ sprite_frames = SubResource("SpriteFrames_glt2p")
 animation = &"Sit"
 frame_progress = 0.02693579
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=205392411]
+position = Vector2(0, -25.5)
+shape = SubResource("CapsuleShape2D_ylu1k")
+
+[node name="DashParticles" type="GPUParticles2D" parent="." unique_id=1442183972]
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=743513336]
 position = Vector2(0, -25.5)
 shape = SubResource("CapsuleShape2D_ylu1k")
@@ -556,6 +567,9 @@ visibility_rect = Rect2(-150, -100, 250, 200)
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_srn3j")
 
+[node name="AttackHitbox1" type="Area2D" parent="." unique_id=2124360570]
+
+[node name="Hitbox1" type="CollisionShape2D" parent="AttackHitbox1" unique_id=172382303]
 [node name="AttackHitbox1" type="Area2D" parent="." unique_id=1253156693]
 
 [node name="Hitbox1" type="CollisionShape2D" parent="AttackHitbox1" unique_id=1579805784]
@@ -563,6 +577,9 @@ position = Vector2(27.5, -22)
 shape = SubResource("RectangleShape2D_ydsn6")
 disabled = true
 
+[node name="AttackHitbox2" type="Area2D" parent="." unique_id=965522071]
+
+[node name="Hitbox2" type="CollisionShape2D" parent="AttackHitbox2" unique_id=1140039375]
 [node name="AttackHitbox2" type="Area2D" parent="." unique_id=1817830315]
 
 [node name="Hitbox2" type="CollisionShape2D" parent="AttackHitbox2" unique_id=1048358680]
@@ -570,6 +587,9 @@ position = Vector2(28.5, -18)
 shape = SubResource("RectangleShape2D_scca8")
 disabled = true
 
+[node name="AttackHitbox3" type="Area2D" parent="." unique_id=762116111]
+
+[node name="Hitbox3" type="CollisionShape2D" parent="AttackHitbox3" unique_id=2049072460]
 [node name="AttackHitbox3" type="Area2D" parent="." unique_id=2025899311]
 
 [node name="Hitbox3" type="CollisionShape2D" parent="AttackHitbox3" unique_id=186071053]
@@ -577,6 +597,9 @@ position = Vector2(39.5, -15)
 shape = SubResource("RectangleShape2D_5fe0u")
 disabled = true
 
+[node name="Area2D" type="Area2D" parent="." unique_id=344235577]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1196507045]
 [node name="Area2D" type="Area2D" parent="." unique_id=1952938084]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1795339204]

@@ -117,7 +117,7 @@ func _ready():
 			attack_hitbox_base_positions.append(hitbox.position)
 			attack_hitbox_shape_base_positions.append(base_shape_position_to_store)
 			if shape != null:
-				shape.disabled = true
+				shape.set_deferred("disabled", true)
 		else:
 			attack_hitbox_shapes.append(null)
 			attack_hitbox_base_positions.append(Vector2.ZERO)
@@ -529,13 +529,19 @@ func apply_knockback(knockback_velocity: Vector2) -> void:
 	damage_knockback_lock_remaining = damage_knockback_lock_duration
 	currentState = State.Fall
 
+func apply_stun(duration: float) -> void:
+	cancel_attack()
+	is_dashing = false
+	is_blinking = false
+	damage_knockback_lock_remaining = maxf(damage_knockback_lock_remaining, duration)
+
 func heal(amount: int) -> void:
 	hp += amount
 
 func disable_all_attack_hitboxes() -> void:
 	for shape in attack_hitbox_shapes:
 		if shape != null:
-			shape.disabled = true
+			shape.set_deferred("disabled", true)
 
 func set_active_attack_hitbox(attack_index: int) -> void:
 	disable_all_attack_hitboxes()
@@ -544,7 +550,7 @@ func set_active_attack_hitbox(attack_index: int) -> void:
 
 	var active_hitbox_shape: CollisionShape2D = attack_hitbox_shapes[attack_index] as CollisionShape2D
 	if active_hitbox_shape != null:
-		active_hitbox_shape.disabled = false
+		active_hitbox_shape.set_deferred("disabled", false)
 
 func update_attack_hitbox_positions() -> void:
 	var facing_sign: float = -1.0 if lastDirection < 0 else 1.0
