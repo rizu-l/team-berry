@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://ddmicl4x648su"]
+
+[ext_resource type="Script" uid="uid://dibqxirgdh8d4" path="res://script/inventory_ui.gd" id="1_4x38u"]
+
+[node name="InventoryUI" type="Control" unique_id=477019824]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_4x38u")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1482788283]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=858555635]
+layout_mode = 2
+
+[node name="StatsPanel" type="Panel" parent="VBoxContainer/HBoxContainer" unique_id=791356081]
+layout_mode = 2
+
+[node name="StatsLabel" type="Label" parent="VBoxContainer/HBoxContainer/StatsPanel" unique_id=1036592549]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/StatsPanel" unique_id=1059356334]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="EquippedCharmsPanel" type="Panel" parent="VBoxContainer/HBoxContainer/StatsPanel/VBoxContainer" unique_id=1376154998]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/StatsPanel/VBoxContainer/EquippedCharmsPanel" unique_id=115515022]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="AvailableCharmsPanel" type="Panel" parent="VBoxContainer/HBoxContainer/StatsPanel/VBoxContainer" unique_id=1182846329]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/StatsPanel/VBoxContainer/AvailableCharmsPanel" unique_id=1478045601]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/StatsPanel/VBoxContainer/AvailableCharmsPanel/ScrollContainer" unique_id=834021521]
+layout_mode = 2
+
+[node name="HBoxContainerButtons" type="HBoxContainer" parent="VBoxContainer" unique_id=716840821]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="VBoxContainer/HBoxContainerButtons" unique_id=703916509]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="VBoxContainer/HBoxContainerButtons" unique_id=1427019207]
+layout_mode = 2
+
+[node name="tooltip" type="Label" parent="VBoxContainer" unique_id=545263499]
+layout_mode = 2
