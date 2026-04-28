@@ -88,6 +88,7 @@ shape = SubResource("RectangleShape2D_r38o8")
 layer = 10
 
 [node name="InteractPrompt" type="Label" parent="PromptLayer" unique_id=474326979]
+visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -98,5 +99,15 @@ offset_bottom = 274.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("3_qe24g")
 theme_override_font_sizes/font_size = 64
-text = "Press  F  to rest"
+text = "  Press  F  to rest "
 horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="PromptLayer/InteractPrompt" unique_id=1087606007]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.2, 0.2, 0.79607844)

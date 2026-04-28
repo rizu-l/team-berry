@@ -25,9 +25,9 @@ buses/default_bus_layout="uid://dphu8xol3lx7d"
 
 [autoload]
 
-GameManager="*uid://cx7qaetniy6td"
-SignalBus="*uid://dgavkddv5cs7j"
-ElevatorUI="*uid://dnt30npks24pj"
+GameManager="*res://script/game_manager.gd"
+SignalBus="*res://signal_bus.gd"
+ElevatorUI="*res://Stages/elevatorUI.tscn"
 
 [display]
 

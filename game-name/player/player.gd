@@ -13,8 +13,8 @@ const WALK_SPEED = 100.0
 const SPRINT_SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 var currentState
-var jumpDirection = 0  # Store the jump direction
-var lastDirection = 1  # Store the last facing direction (1 = right, -1 = left)
+var jumpDirection = 0
+var lastDirection = 1
 var doubleJump = true
 var isDoubleJumping = false
 var is_dashing = false
@@ -96,11 +96,14 @@ var unlocked_abilities: Dictionary:
 		return GameManager.get_unlocked_abilities()
 
 func _ready():
-	max_hp = starting_max_hp
-	hp = starting_hp
-	max_mp = starting_max_mp
-	mp = starting_mp
-	attack = starting_attack
+	GameManager.initialize_player_defaults(
+		starting_max_hp,
+		starting_hp,
+		starting_max_mp,
+		starting_mp,
+		starting_attack,
+		mp_regen_per_second
+	)
 	if start_with_blink:
 		GameManager.unlock_ability(AbilityData.ability_list.BLINK)
 	if dash_particles != null:
@@ -170,7 +173,6 @@ func _physics_process(delta: float) -> void:
 
 	player_idle(delta)
 	
-	# Add the gravity.
 	if  !is_on_floor():
 		velocity += get_gravity() * delta
 	else:
@@ -265,7 +267,7 @@ func regenerate_mp(delta: float) -> void:
 	if mp >= max_mp:
 		return
 
-	mp += mp_regen_per_second * delta
+	mp += GameManager.get_player_mp_regen() * delta
 
 func player_heal() -> void:
 	if not Input.is_action_just_pressed("heal"):
@@ -401,14 +403,12 @@ func player_jump(_delta):
 	
 	if Input.is_action_just_pressed("jump"):
 		cancel_attack()
-		# Ground jump
 		if is_on_floor():
 			velocity.y = JUMP_VELOCITY
 			if direction != 0:
 				jumpDirection = direction
 			else:
 				jumpDirection = lastDirection
-		# Double jump (only if WINGS ability is unlocked)
 		elif doubleJump and GameManager.has_ability(AbilityData.ability_list.WINGS):
 			velocity.y = JUMP_VELOCITY
 			doubleJump = false
@@ -430,13 +430,10 @@ func player_jump(_delta):
 				elif not is_attacking:
 					currentState = State.Jump
 		
-	# Only update jump state if in the air
 	if not is_on_floor():
-		# Switch to fall animation if falling (velocity.y is positive)
 		if velocity.y > 0 and not is_attacking:
 			currentState = State.Fall
 		else:
-			# Still ascending - check if double jumping
 			if isDoubleJumping and not is_attacking:
 				currentState = State.DoubleJump
 			elif not is_attacking:

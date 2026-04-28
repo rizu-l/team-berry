@@ -15,10 +15,12 @@
 [ext_resource type="PackedScene" uid="uid://djgulxsq4f6dk" path="res://player/character_body_2d.tscn" id="13_oddhr"]
 [ext_resource type="Texture2D" uid="uid://7121funoq7ky" path="res://tileset/Stage1/basic.png" id="14_oytsp"]
 [ext_resource type="Texture2D" uid="uid://by1r5j0bh876w" path="res://tileset/Stage1/background_1/4 Forest parallax vertical skybox fulll.png" id="15_ehqr5"]
+[ext_resource type="PackedScene" uid="uid://dpdv3j1nnljvs" path="res://enemies/huntress.tscn" id="15_rp6eb"]
 [ext_resource type="Texture2D" uid="uid://dspso4io5a5i5" path="res://tileset/Stage1/background_1/forest_mountain.png" id="16_ehqr5"]
 [ext_resource type="Texture2D" uid="uid://b40xa2ribfrv8" path="res://tileset/Stage1/background_1/background vertical/Forest parallax vertical cloud full.png" id="16_mc48y"]
 [ext_resource type="Texture2D" uid="uid://nb4f8qam5n2n" path="res://tileset/Stage1/background_1/forest_back.png" id="17_mc48y"]
 [ext_resource type="Texture2D" uid="uid://dx10e8sfceyr1" path="res://tileset/Stage1/background_1/forest_mid.png" id="18_tm5al"]
+[ext_resource type="PackedScene" uid="uid://baid383s1rnt0" path="res://Objects/Altar.tscn" id="19_altar"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p5r28"]
 texture = ExtResource("14_oytsp")
@@ -901,23 +903,34 @@ offset_bottom = 137.0
 
 [node name="BossName" type="Label" parent="HUD/BossUI" unique_id=1563196562]
 layout_mode = 0
-offset_left = -740.0
-offset_top = 135.0
-offset_right = -247.0
-offset_bottom = 265.0
+offset_left = 520.0
+offset_top = -6.0
+offset_right = 1030.0
+offset_bottom = 124.0
 theme_override_fonts/font = ExtResource("6_mc48y")
 theme_override_font_sizes/font_size = 128
 text = "FROGGER"
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="HUD/BossUI/BossName" unique_id=1381506854]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.2, 0.2, 0.79607844)
 
 [node name="BossBar" type="TextureProgressBar" parent="HUD/BossUI" unique_id=1662528797]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1361.0
-offset_top = 167.0
-offset_right = -1869.0
-offset_bottom = 55.0
+offset_left = 30.0
+offset_top = 1.0
+offset_right = -478.0
+offset_bottom = -111.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(15, 15)
@@ -930,6 +943,12 @@ position = Vector2(1187, 592)
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=503099603]
 zoom = Vector2(4, 4)
+
+[node name="Altar" parent="." unique_id=289189091 instance=ExtResource("19_altar")]
+position = Vector2(1795, 592)
+
+[node name="Huntress" parent="." unique_id=1985724337 instance=ExtResource("15_rp6eb")]
+position = Vector2(1655, 485)
 
 [node name="AbilityUnlock" parent="." unique_id=1363055432 instance=ExtResource("1_nxema")]
 position = Vector2(2556, 1096)

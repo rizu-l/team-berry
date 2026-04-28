@@ -1,6 +1,4 @@
 extends CanvasLayer
-# Popup that displays when a charm is unlocked
-# Mirrors ability_unlock_screen.gd pattern exactly
 
 @onready var NameLabel: Label = $ColorRect/CenterContainer/VBoxContainer/VBoxContainer/NameLabel
 @onready var DescriptionLabel: Label = $ColorRect/CenterContainer/VBoxContainer/VBoxContainer/DescriptionLabel

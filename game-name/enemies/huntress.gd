@@ -32,6 +32,8 @@ const SPECIAL_DASH_SPEED := 470.0
 const ATTACK1_STEP_SPEED := 85.0
 const ATTACK3_STEP_SPEED := 65.0
 const ENRAGE_HEALTH_RATIO := 0.5
+const DASH_ATTACK_DISTANCE := 152.0
+const SPECIAL_DASH_DISTANCE := 158.0
 
 var state = HuntressState.CHASING
 var current_action = HuntressAction.NONE
@@ -84,7 +86,7 @@ func setup_attack_hitboxes() -> void:
 			connected_areas[area.get_instance_id()] = true
 			area.body_entered.connect(_on_attack_hitbox_body_entered)
 
-func set_action_hitbox(action: int, area: Area2D) -> void:
+func set_action_hitbox(action, area: Area2D) -> void:
 	attack_hitboxes[action] = area
 	attack_hitbox_base_positions[action] = area.position
 	var shape := area.get_node_or_null("CollisionShape2D") as CollisionShape2D
@@ -188,7 +190,7 @@ func should_jump_pursue(abs_distance_x: float, vertical_offset: float) -> bool:
 
 	return rng.randf() < 0.22 and abs_distance_x > attack_range and abs_distance_x < dash_attack_range
 
-func pick_close_attack(vertical_offset: float) -> int:
+func pick_close_attack(vertical_offset: float):
 	if vertical_offset < -42.0:
 		return HuntressAction.UP_IDLE
 	if rng.randf() < 0.45:
@@ -196,7 +198,7 @@ func pick_close_attack(vertical_offset: float) -> int:
 
 	return HuntressAction.ATTACK1
 
-func pick_dash_attack() -> int:
+func pick_dash_attack():
 	if hp <= int(max_hp * ENRAGE_HEALTH_RATIO) and rng.randf() < 0.56:
 		return HuntressAction.SPECIAL_DASH
 	if rng.randf() < 0.36:
@@ -204,7 +206,7 @@ func pick_dash_attack() -> int:
 
 	return HuntressAction.DASH_ATTACK
 
-func start_ground_action(action: int, target: Node2D) -> void:
+func start_ground_action(action, target: Node2D) -> void:
 	current_action = action
 	state = HuntressState.DASH_ATTACK if is_dash_action(action) else HuntressState.GROUND_ATTACK
 	state_time_remaining = get_animation_duration(get_action_animation(action), 0.42)
@@ -224,7 +226,7 @@ func process_ground_attack(delta: float) -> void:
 
 func process_dash_attack(delta: float) -> void:
 	state_time_remaining -= delta
-	velocity.x = get_dash_action_speed(current_action) * facing_direction * get_enrage_multiplier()
+	velocity.x = get_ledge_safe_direction(facing_direction) * get_dash_action_speed(current_action)
 	if update_current_attack_hitbox():
 		apply_damage_to_attack_overlaps()
 
@@ -275,7 +277,7 @@ func process_airborne() -> void:
 
 	play_animation(&"fall" if velocity.y > 0.0 else &"mid_air")
 
-func start_air_action(action: int, target: Node2D) -> void:
+func start_air_action(action, target: Node2D) -> void:
 	current_action = action
 	state = HuntressState.AIR_ATTACK
 	state_time_remaining = get_animation_duration(get_action_animation(action), 0.44)
@@ -348,11 +350,12 @@ func get_ground_attack_velocity() -> float:
 		_:
 			return 0.0
 
-func get_dash_action_speed(action: int) -> float:
-	if action == HuntressAction.SPECIAL_DASH:
-		return SPECIAL_DASH_SPEED
-
-	return DASH_ATTACK_SPEED
+func get_dash_action_speed(action) -> float:
+	var action_distance := SPECIAL_DASH_DISTANCE if action == HuntressAction.SPECIAL_DASH else DASH_ATTACK_DISTANCE
+	var animation_duration := get_animation_duration(get_action_animation(action), 0.4)
+	if animation_duration <= 0.0:
+		return SPECIAL_DASH_SPEED if action == HuntressAction.SPECIAL_DASH else DASH_ATTACK_SPEED
+	return action_distance / animation_duration
 
 func get_chase_speed() -> float:
 	return chase_speed * get_enrage_multiplier()
@@ -366,10 +369,10 @@ func get_action_cooldown(base_cooldown: float) -> float:
 		cooldown *= 0.55
 	return cooldown * rng.randf_range(0.75, 1.1)
 
-func is_dash_action(action: int) -> bool:
+func is_dash_action(action) -> bool:
 	return action == HuntressAction.DASH_ATTACK or action == HuntressAction.SPECIAL_DASH
 
-func get_action_animation(action: int) -> StringName:
+func get_action_animation(action) -> StringName:
 	match action:
 		HuntressAction.ATTACK1:
 			return &"attack1"
@@ -388,7 +391,7 @@ func get_action_animation(action: int) -> StringName:
 		_:
 			return &"idle"
 
-func get_action_damage(action: int) -> int:
+func get_action_damage(action) -> int:
 	match action:
 		HuntressAction.ATTACK1:
 			return attack_power
@@ -405,7 +408,7 @@ func get_action_damage(action: int) -> int:
 		_:
 			return attack_power
 
-func get_action_stun(action: int) -> float:
+func get_action_stun(action) -> float:
 	match action:
 		HuntressAction.SPECIAL_DASH:
 			return 0.34
@@ -416,7 +419,7 @@ func get_action_stun(action: int) -> float:
 		_:
 			return 0.14
 
-func get_action_knockback(action: int, knockback_direction_x: float) -> Vector2:
+func get_action_knockback(action, knockback_direction_x: float) -> Vector2:
 	match action:
 		HuntressAction.SPECIAL_DASH:
 			return Vector2(640.0 * knockback_direction_x, -250.0)
@@ -448,7 +451,7 @@ func is_current_action_frame_active() -> bool:
 	var frame_range := get_active_frame_range(current_action)
 	return frame >= frame_range.x and frame <= frame_range.y
 
-func get_active_frame_range(action: int) -> Vector2i:
+func get_active_frame_range(action) -> Vector2i:
 	match action:
 		HuntressAction.ATTACK1:
 			return Vector2i(1, 2)
@@ -465,7 +468,7 @@ func get_active_frame_range(action: int) -> Vector2i:
 		_:
 			return Vector2i(99, 99)
 
-func set_action_hitbox_active(action: int, active: bool) -> void:
+func set_action_hitbox_active(action, active: bool) -> void:
 	var shape := attack_shapes[action] as CollisionShape2D
 	if shape != null:
 		shape.set_deferred("disabled", not active)

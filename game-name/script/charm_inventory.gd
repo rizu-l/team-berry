@@ -3,7 +3,6 @@ class_name CharmInventory
 
 const MAX_EQUIPPED = 4
 
-# Track unlocked and equipped charms by their enum ID
 var unlocked_charms: Dictionary = {}
 var equipped_charm_ids: Array = []
 
@@ -13,7 +12,6 @@ func _init():
 	unlock_charm(CharmData.charm_list.MYSTIC_WELL)
 
 func unlock_charm(charm_id) -> bool:
-	"""Unlock a charm"""
 	if not CharmData.INFO.has(charm_id):
 		return false
 	
@@ -27,11 +25,9 @@ func equip_charm(charm_id) -> bool:
 	if not is_charm_unlocked(charm_id):
 		return false
 	
-	# Already equipped
 	if equipped_charm_ids.has(charm_id):
 		return false
 	
-	# No space
 	if equipped_charm_ids.size() >= MAX_EQUIPPED:
 		return false
 	
@@ -39,7 +35,6 @@ func equip_charm(charm_id) -> bool:
 	return true
 
 func unequip_charm(charm_id) -> bool:
-	"""Unequip a charm"""
 	if not equipped_charm_ids.has(charm_id):
 		return false
 	
@@ -47,18 +42,15 @@ func unequip_charm(charm_id) -> bool:
 	return true
 
 func toggle_charm(charm_id) -> bool:
-	"""Toggle charm equip status"""
 	if equipped_charm_ids.has(charm_id):
 		return unequip_charm(charm_id)
 	else:
 		return equip_charm(charm_id)
 
 func get_equipped_charms() -> Array:
-	"""Get all equipped charm IDs"""
 	return equipped_charm_ids.duplicate()
 
 func get_total_buffs() -> Dictionary:
-	"""Calculate total buffs from equipped charms"""
 	var total_buffs = {
 		"max_hp": 0,
 		"attack": 0,
@@ -79,11 +71,9 @@ func get_total_buffs() -> Dictionary:
 	return total_buffs
 
 func is_charm_equipped(charm_id) -> bool:
-	"""Check if a charm is equipped"""
 	return equipped_charm_ids.has(charm_id)
 
 func can_equip_charm(charm_id) -> bool:
-	"""Check if a charm can be equipped"""
 	if not is_charm_unlocked(charm_id):
 		return false
 	

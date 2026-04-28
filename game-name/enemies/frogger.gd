@@ -180,7 +180,7 @@ func finish_jump_toward() -> void:
 	else:
 		start_action_buffer(&"jump_toward", landing_action_buffer)
 
-func should_stop_approaching(distance_to_target: float) -> bool:
+func should_stop_approaching(distance_to_target) -> bool:
 	return approach_jump_count >= approach_jump_limit or distance_to_target <= approach_stop_radius
 
 func set_pending_attack(target: Node2D) -> void:
@@ -299,13 +299,13 @@ func update_attack_hitbox_position(
 	shape: CollisionPolygon2D,
 	base_shape_position: Vector2,
 	base_polygon: PackedVector2Array,
-	facing_sign: float
+	facing_sign
 ) -> void:
 	hitbox.position = Vector2(base_hitbox_position.x * facing_sign, base_hitbox_position.y)
 	shape.position = Vector2(base_shape_position.x * facing_sign, base_shape_position.y)
 	shape.polygon = get_flipped_polygon(base_polygon, facing_sign)
 
-func get_flipped_polygon(base_polygon: PackedVector2Array, facing_sign: float) -> PackedVector2Array:
+func get_flipped_polygon(base_polygon: PackedVector2Array, facing_sign) -> PackedVector2Array:
 	if facing_sign > 0.0:
 		return base_polygon
 

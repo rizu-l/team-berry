@@ -1,5 +1,4 @@
 extends Control
-# Attach this to the root of your menu scene
 
 @onready var menu_container = $VBoxContainer
 @onready var start_button = $VBoxContainer/StartButton
@@ -11,17 +10,14 @@ const settings_scene = preload("res://menus/settings_menu.tscn")
 const save_slot_scene = preload("res://menus/save_slot_menu.tscn")
 
 func _ready():
-	# Connect button signals
 	start_button.pressed.connect(_on_start_pressed)
 	load_button.pressed.connect(_on_load_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
 	
-	# Optional: Add some animation on startup
 	animate_menu_in()
 
 func animate_menu_in():
-	"""Animate the menu buttons in on startup"""
 	var buttons = [start_button, load_button, settings_button, quit_button]
 	for i in range(buttons.size()):
 		buttons[i].modulate.a = 0
@@ -43,7 +39,6 @@ func open_save_slots(load_mode: bool) -> void:
 
 func _on_settings_pressed():
 	print("Opening settings...")
-	# Instantiate and add the settings menu
 	var settings_menu = settings_scene.instantiate()
 	add_child(settings_menu)
 

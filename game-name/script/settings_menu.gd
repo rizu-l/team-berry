@@ -1,5 +1,4 @@
 extends Control
-# Attach this to the root of your settings scene
 
 @onready var master_volume_slider = $VBoxContainer/MasterVolumeSlider
 @onready var music_volume_slider = $VBoxContainer/MusicVolumeSlider
@@ -7,18 +6,14 @@ extends Control
 @onready var back_button = $VBoxContainer/BackButton
 
 func _ready():
-	# Connect signals
 	master_volume_slider.value_changed.connect(_on_master_volume_changed)
 	music_volume_slider.value_changed.connect(_on_music_volume_changed)
 	sfx_volume_slider.value_changed.connect(_on_sfx_volume_changed)
 	back_button.pressed.connect(_on_back_pressed)
 	
-	# Load saved settings
 	load_settings()
 
 func load_settings():
-	"""Load settings from previous session"""
-	# Example using ConfigFile
 	var config = ConfigFile.new()
 	var error = config.load("user://settings.cfg")
 	
@@ -27,13 +22,11 @@ func load_settings():
 		music_volume_slider.value = config.get_value("audio", "music_volume", 0.7)
 		sfx_volume_slider.value = config.get_value("audio", "sfx_volume", 0.8)
 	else:
-		# Default values
 		master_volume_slider.value = 0.8
 		music_volume_slider.value = 0.7
 		sfx_volume_slider.value = 0.8
 
 func save_settings():
-	"""Save settings to file"""
 	var config = ConfigFile.new()
 	config.set_value("audio", "master_volume", master_volume_slider.value)
 	config.set_value("audio", "music_volume", music_volume_slider.value)
@@ -41,7 +34,6 @@ func save_settings():
 	config.save("user://settings.cfg")
 
 func _on_master_volume_changed(value: float):
-	# Get the master audio bus and set its volume
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), false)
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
 	save_settings()

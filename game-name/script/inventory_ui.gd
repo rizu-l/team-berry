@@ -23,19 +23,12 @@ func _ready():
 	close_button.pressed.connect(_on_close_pressed)
 	save_button.pressed.connect(_on_save_pressed)
 	
-	# Hide tooltip initially
 	tooltip.visible = false
 	
-	# Initialize charm inventory from GameManager
 	charm_inventory = GameManager.get_charm_inventory()
 	
-	# Create charm slots for equipped charms
 	create_charm_slots()
-	
-	# Create charm list for available charms
 	create_charm_list()
-	
-	# Update display
 	update_stats_display()
 	update_equipped_display()
 
@@ -44,8 +37,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		_on_close_pressed()
 
 func create_charm_slots() -> void:
-	"""Create 4 charm slot buttons for equipped charms"""
-	# Clear existing
 	for child in equipped_container.get_children():
 		child.queue_free()
 	
@@ -67,8 +58,6 @@ func create_charm_slots() -> void:
 		charm_slot_buttons.append(slot_button)
 
 func create_charm_list() -> void:
-	"""Create list of all available charms"""
-	# Clear existing
 	for child in available_charms_container.get_children():
 		child.queue_free()
 	
@@ -97,17 +86,16 @@ func create_charm_list() -> void:
 		charm_list_buttons.append(charm_button)
 
 func update_stats_display() -> void:
-	"""Update the stats panel"""
 	var hp = GameManager.get_player_hp()
 	var max_hp = GameManager.get_player_max_hp()
 	var mp = GameManager.get_player_mp()
 	var max_mp = GameManager.get_player_max_mp()
 	var attack = GameManager.get_player_attack()
-	var mp_regen = 3.0  # Get from player or GameManager
+	var mp_regen = GameManager.get_player_mp_regen()
 	
 	var total_buffs = charm_inventory.get_total_buffs()
 	
-	var stats_text = "BASE STATS:\n"
+	var stats_text = "PLAYER STATS:\n"
 	stats_text += "HP: %d / %d\n" % [hp, max_hp]
 	stats_text += "MP: %.0f / %.0f\n" % [mp, max_mp]
 	stats_text += "Attack: %d\n" % attack
@@ -121,7 +109,6 @@ func update_stats_display() -> void:
 	stat_label.text = stats_text
 
 func update_equipped_display() -> void:
-	"""Update the equipped charm slots"""
 	var equipped = charm_inventory.get_equipped_charm_details()
 	
 	for i in range(4):
@@ -136,7 +123,6 @@ func update_equipped_display() -> void:
 			charm_slot_buttons[i].icon = null
 
 func _on_charm_clicked(charm_id) -> void:
-	"""Handle charm click"""
 	var charm = charm_inventory.get_charm(charm_id)
 	
 	if charm.is_empty():
@@ -151,19 +137,17 @@ func _on_charm_clicked(charm_id) -> void:
 		return
 	
 	if charm["is_equipped"]:
-		charm_inventory.unequip_charm(charm_id)
+		GameManager.unequip_charm(charm_id)
 	else:
-		if not charm_inventory.equip_charm(charm_id):
+		if not GameManager.equip_charm(charm_id):
 			show_tooltip(charm["display_name"], "No empty charm slots.")
 			return
 	
-	# Update display
 	update_equipped_display()
 	create_charm_list()
 	update_stats_display()
 
 func _on_charm_slot_pressed(slot_index: int) -> void:
-	"""Handle equipped charm slot click"""
 	if not is_at_altar:
 		show_tooltip("Charm Slot", "Rest at an altar to unequip charms.")
 		return
@@ -171,17 +155,14 @@ func _on_charm_slot_pressed(slot_index: int) -> void:
 	var equipped = charm_inventory.get_equipped_charms()
 	
 	if slot_index < equipped.size():
-		# Unequip this charm
 		var charm_id = equipped[slot_index]
-		charm_inventory.unequip_charm(charm_id)
+		GameManager.unequip_charm(charm_id)
 		
-		# Update display
 		update_equipped_display()
 		create_charm_list()
 		update_stats_display()
 
 func _on_charm_slot_hover(slot_index: int) -> void:
-	"""Show tooltip for equipped charm"""
 	var equipped = charm_inventory.get_equipped_charm_details()
 	
 	if slot_index < equipped.size():
@@ -189,14 +170,12 @@ func _on_charm_slot_hover(slot_index: int) -> void:
 		show_tooltip(charm["display_name"], "%s\n%s" % [charm["description"], charm["effect_text"]])
 
 func _on_charm_hover(charm_id) -> void:
-	"""Show tooltip for charm in list"""
 	var charm = charm_inventory.get_charm(charm_id)
 	
 	if not charm.is_empty():
 		show_tooltip(charm["display_name"], "%s\n%s" % [charm["description"], charm["effect_text"]])
 
 func show_tooltip(charm_name: String, description: String) -> void:
-	"""Display tooltip"""
 	tooltip.text = "%s\n%s" % [charm_name, description]
 	tooltip.visible = true
 
@@ -214,21 +193,17 @@ func get_charm_button_text(charm: Dictionary) -> String:
 	]
 
 func _on_tooltip_hide() -> void:
-	"""Hide tooltip"""
 	tooltip.visible = false
 
 func set_at_altar(at_altar: bool) -> void:
-	"""Set whether player is at altar (enables equip/unequip)"""
 	is_at_altar = at_altar
 	save_button.visible = at_altar
 
 func _on_close_pressed() -> void:
-	"""Close inventory"""
 	get_tree().paused = false
 	queue_free()
 
 func _on_save_pressed() -> void:
-	"""Save game"""
 	if is_at_altar:
 		save_game()
 		show_tooltip("Saved!", "Game saved successfully")
@@ -237,16 +212,13 @@ func _on_save_pressed() -> void:
 		queue_free()
 
 func save_game() -> void:
-	"""Save the game state using Godot Resources"""
 	var player = get_tree().get_first_node_in_group("player")
 	
 	if player == null:
 		return
 	
-	# Create SaveData resource
 	var save_data = SaveData.new()
 	
-	# Save player stats from GameManager
 	save_data.hp = GameManager.get_player_hp()
 	save_data.max_hp = GameManager.get_player_max_hp()
 	save_data.mp = GameManager.get_player_mp()
@@ -254,13 +226,11 @@ func save_game() -> void:
 	save_data.attack = GameManager.get_player_attack()
 	save_data.unlocked_abilities = GameManager.get_unlocked_abilities().duplicate()
 	
-	# Save position and level
 	save_data.position = player.global_position
 	save_data.level = get_tree().current_scene.name
 	save_data.level_path = get_tree().current_scene.scene_file_path
 	save_data.saved_at = Time.get_datetime_string_from_system(false, true)
 	
-	# Save charm inventory
 	var unlocked_charms_array = []
 	for charm_id in charm_inventory.unlocked_charms.keys():
 		if charm_inventory.unlocked_charms[charm_id]:
@@ -268,7 +238,6 @@ func save_game() -> void:
 	save_data.unlocked_charms = unlocked_charms_array
 	save_data.equipped_charm_ids = charm_inventory.equipped_charm_ids.duplicate()
 	
-	# Save to file using ResourceSaver
 	var error = ResourceSaver.save(save_data, GameManager.get_save_path())
 	if error == OK:
 		print("Game saved successfully!")
