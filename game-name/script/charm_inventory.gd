@@ -6,14 +6,14 @@ const CHARM_DATA := preload("res://script/charm_data.gd")
 
 var unlocked_charms: Dictionary = {}
 var equipped_charm_ids: Array = []
+var charm_data = CHARM_DATA.new()
 
 func _init():
-	unlock_charm(CHARM_DATA.charm_list.VITALITY_CHARM)
-	unlock_charm(CHARM_DATA.charm_list.SHARP_EDGE)
-	unlock_charm(CHARM_DATA.charm_list.MYSTIC_WELL)
+	for charm_id in charm_data.get_default_unlocked_charms():
+		unlock_charm(charm_id)
 
 func unlock_charm(charm_id) -> bool:
-	if not CHARM_DATA.INFO.has(charm_id):
+	if not charm_data.has_charm(charm_id):
 		return false
 	
 	unlocked_charms[charm_id] = true
@@ -61,8 +61,8 @@ func get_total_buffs() -> Dictionary:
 	}
 	
 	for charm_id in equipped_charm_ids:
-		if CHARM_DATA.INFO.has(charm_id):
-			var charm_info = CHARM_DATA.INFO[charm_id]
+		if charm_data.has_charm(charm_id):
+			var charm_info = charm_data.get_charm_info(charm_id)
 			if charm_info.has("stat_buffs"):
 				var buffs = charm_info["stat_buffs"]
 				for stat in buffs.keys():
@@ -87,10 +87,10 @@ func can_equip_charm(charm_id) -> bool:
 	return true
 
 func get_charm(charm_id) -> Dictionary:
-	if not CHARM_DATA.INFO.has(charm_id):
+	if not charm_data.has_charm(charm_id):
 		return {}
 
-	var charm_info: Dictionary = CHARM_DATA.INFO[charm_id]
+	var charm_info: Dictionary = charm_data.get_charm_info(charm_id)
 	return {
 		"charm_id": charm_id,
 		"display_name": charm_info.get("name", "Unknown Charm"),
@@ -115,7 +115,7 @@ func get_effect_text(stat_buffs: Dictionary) -> String:
 
 func get_all_charms() -> Array:
 	var charms: Array = []
-	for charm_id in CHARM_DATA.INFO.keys():
+	for charm_id in charm_data.get_all_charm_ids():
 		charms.append(get_charm(charm_id))
 	return charms
 

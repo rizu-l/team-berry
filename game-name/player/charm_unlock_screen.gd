@@ -7,13 +7,15 @@ const CHARM_DATA := preload("res://script/charm_data.gd")
 @onready var IconIMGNode: TextureRect = $ColorRect/CenterContainer/VBoxContainer/IconIMG
 
 var charm_to_show: int
+var charm_data = CHARM_DATA.new()
 
 func _ready() -> void:
 	get_tree().paused = true
 	
-	NameLabel.text = CHARM_DATA.INFO[charm_to_show]["name"]
-	DescriptionLabel.text = CHARM_DATA.INFO[charm_to_show]["description"]
-	IconIMGNode.texture = CHARM_DATA.INFO[charm_to_show]["icon"]
+	var charm_info: Dictionary = charm_data.get_charm_info(charm_to_show)
+	NameLabel.text = charm_info.get("name", "Unknown Charm")
+	DescriptionLabel.text = charm_info.get("description", "")
+	IconIMGNode.texture = charm_info.get("icon", null)
 
 func _on_close_button_pressed() -> void:
 	get_tree().paused = false

@@ -91,8 +91,18 @@ const INFO: Dictionary = {
 	},
 }
 
-func _ready() -> void:
-	pass
+func has_charm(charm_id: int) -> bool:
+	return INFO.has(charm_id)
 
-func _process(_delta: float) -> void:
-	pass
+func get_charm_info(charm_id: int) -> Dictionary:
+	return INFO.get(charm_id, {})
+
+func get_all_charm_ids() -> Array:
+	return INFO.keys()
+
+func get_default_unlocked_charms() -> Array[int]:
+	return [
+		charm_list.VITALITY_CHARM,
+		charm_list.SHARP_EDGE,
+		charm_list.MYSTIC_WELL,
+	]
