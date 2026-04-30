@@ -5,7 +5,20 @@
 [ext_resource type="Texture2D" uid="uid://d336mg0uiijoa" path="res://tileset/Stage3/background3.png" id="3_kvm54"]
 [ext_resource type="Texture2D" uid="uid://ceynnotj4ghd" path="res://tileset/Stage3/background4b.png" id="4_ipvt8"]
 [ext_resource type="Texture2D" uid="uid://c37ay0vumv7yg" path="res://tileset/all_original_edited_tiles-1.png-8.png" id="5_7lpg3"]
+[ext_resource type="PackedScene" uid="uid://dpdv3j1nnljvs" path="res://enemies/huntress.tscn" id="6_1vt1a"]
 [ext_resource type="PackedScene" uid="uid://djgulxsq4f6dk" path="res://player/character_body_2d.tscn" id="6_rj1j4"]
+[ext_resource type="PackedScene" uid="uid://baid383s1rnt0" path="res://Objects/Altar.tscn" id="8_q2rjg"]
+[ext_resource type="Script" uid="uid://cldayk6pqgeb0" path="res://script/hp_ui.gd" id="9_oxtml"]
+[ext_resource type="Texture2D" uid="uid://cayl7ppss6dum" path="res://assets/hp_bar_under.png" id="10_legrv"]
+[ext_resource type="Texture2D" uid="uid://bftwrr5puee3j" path="res://assets/hp_bar_over.png" id="11_fgsls"]
+[ext_resource type="Texture2D" uid="uid://dbgac8y46lwj" path="res://assets/hp_bar_progress.png" id="12_drcpi"]
+[ext_resource type="FontFile" uid="uid://dwkvnvwhchnmj" path="res://icons/ARCADECLASSIC.TTF" id="13_3cvoo"]
+[ext_resource type="Texture2D" uid="uid://bp2f3atgc5alp" path="res://assets/mp_bar_under.png" id="14_otibt"]
+[ext_resource type="Texture2D" uid="uid://4ynelfejdvs8" path="res://assets/mp_bar_over.png" id="15_yatur"]
+[ext_resource type="Texture2D" uid="uid://dp3ywefc7qf8s" path="res://assets/mp_bar_progress.png" id="16_lchwt"]
+[ext_resource type="Texture2D" uid="uid://brbi550jwv1sn" path="res://assets/boss_bar_under.png" id="17_8aeot"]
+[ext_resource type="Texture2D" uid="uid://q2fbfc1g4jrj" path="res://assets/boss_bar_over.png" id="18_py2g1"]
+[ext_resource type="Texture2D" uid="uid://ccxrjc4iu5fek" path="res://assets/boss_bar_progress.png" id="19_bjpfl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_w41j6"]
 texture = ExtResource("5_7lpg3")
@@ -1103,6 +1116,8 @@ tile_map_data = PackedByteArray("AACm/9n/AgAAABQAAACm/9r/AgAAABUAAACn/9n/AgABABQ
 tile_set = SubResource("TileSet_jlfwy")
 use_kinematic_bodies = true
 
+[node name="Huntress" parent="." unique_id=955641263 instance=ExtResource("6_1vt1a")]
+
 [node name="Player" parent="." unique_id=655446743 instance=ExtResource("6_rj1j4")]
 position = Vector2(-447, -841)
 
@@ -1110,3 +1125,120 @@ position = Vector2(-447, -841)
 zoom = Vector2(4, 4)
 limit_top = -950
 limit_bottom = 375
+
+[node name="Altar" parent="." unique_id=289189091 instance=ExtResource("8_q2rjg")]
+position = Vector2(-421, -153)
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1110758324]
+
+[node name="HPUI" type="Control" parent="HUD" unique_id=1748590434]
+layout_direction = 4
+layout_mode = 3
+anchors_preset = 0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 172.0
+offset_bottom = 172.0
+script = ExtResource("9_oxtml")
+
+[node name="HPBar" type="TextureProgressBar" parent="HUD/HPUI" unique_id=1670368730]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+scale = Vector2(5, 5)
+value = 67.0
+fill_mode = 5
+texture_under = ExtResource("10_legrv")
+texture_over = ExtResource("11_fgsls")
+texture_progress = ExtResource("12_drcpi")
+
+[node name="Label" type="Label" parent="HUD/HPUI" unique_id=2105436745]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("13_3cvoo")
+theme_override_font_sizes/font_size = 48
+text = "67"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MPUI" type="Control" parent="HUD" unique_id=1532774160]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 206.0
+offset_top = 27.0
+offset_right = 452.0
+offset_bottom = 119.0
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="HUD/MPUI" unique_id=992061038]
+layout_mode = 0
+offset_left = 10.999998
+offset_top = -6.0
+offset_right = 43.0
+offset_bottom = 2.0
+scale = Vector2(6, 6)
+value = 54.0
+texture_under = ExtResource("14_otibt")
+texture_over = ExtResource("15_yatur")
+texture_progress = ExtResource("16_lchwt")
+
+[node name="Label" type="Label" parent="HUD/MPUI" unique_id=612253455]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("13_3cvoo")
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BossUI" type="Control" parent="HUD" unique_id=118898197]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 936.0
+offset_top = 17.0
+offset_right = 1476.0
+offset_bottom = 137.0
+
+[node name="BossName" type="Label" parent="HUD/BossUI" unique_id=1894285669]
+layout_mode = 0
+offset_left = 568.0
+offset_top = 5.0
+offset_right = 1131.0
+offset_bottom = 135.0
+theme_override_fonts/font = ExtResource("13_3cvoo")
+theme_override_font_sizes/font_size = 128
+text = "HUNTRESS"
+
+[node name="BossBar" type="TextureProgressBar" parent="HUD/BossUI" unique_id=1535743728]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 22.999939
+offset_top = 15.000015
+offset_right = -485.00006
+offset_bottom = -96.999985
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(15, 15)
+texture_under = ExtResource("17_8aeot")
+texture_over = ExtResource("18_py2g1")
+texture_progress = ExtResource("19_bjpfl")

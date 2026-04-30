@@ -1,4 +1,4 @@
-[gd_scene load_steps=0 format=3 uid="uid://c1dtxbmv8y4ou"]
+[gd_scene format=3 uid="uid://c1dtxbmv8y4ou"]
 
 [ext_resource type="Script" uid="uid://5b8qc7g3yj5k" path="res://script/main_menu.gd" id="1_8gy84"]
 [ext_resource type="FontFile" uid="uid://dwkvnvwhchnmj" path="res://icons/ARCADECLASSIC.TTF" id="2_ij7vn"]
@@ -38,7 +38,7 @@ theme_override_fonts/font = ExtResource("2_ij7vn")
 theme_override_font_sizes/font_size = 64
 text = "New Game"
 
-[node name="LoadButton" type="Button" parent="VBoxContainer"]
+[node name="LoadButton" type="Button" parent="VBoxContainer" unique_id=1919423953]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)

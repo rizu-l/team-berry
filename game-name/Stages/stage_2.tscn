@@ -18,6 +18,10 @@
 [ext_resource type="Texture2D" uid="uid://wwxnxnwtokwa" path="res://tileset/Stage 2/BG_3/BG_3.png" id="15_xhft6"]
 [ext_resource type="Texture2D" uid="uid://dff531undm3sm" path="res://tileset/Stage 2/BG_2/BG_2.png" id="16_y74qs"]
 [ext_resource type="Texture2D" uid="uid://dgae8t6rq72ao" path="res://tileset/Stage 2/BG_1/BG_1.png" id="17_ybm66"]
+[ext_resource type="PackedScene" uid="uid://baid383s1rnt0" path="res://Objects/Altar.tscn" id="19_imm86"]
+[ext_resource type="PackedScene" uid="uid://b3l5dypeta7am" path="res://enemies/samurai.tscn" id="20_2b6sr"]
+[ext_resource type="PackedScene" uid="uid://cyrwlobyu6t22" path="res://enemies/bark.tscn" id="21_gcusc"]
+[ext_resource type="PackedScene" uid="uid://ctmjdx7ubn66k" path="res://enemies/shroom.tscn" id="22_6lxbt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ybm66"]
 size = Vector2(52, 78)
@@ -819,5 +823,35 @@ scale = Vector2(15, 15)
 texture_under = ExtResource("12_6lxbt")
 texture_over = ExtResource("13_ov1yv")
 texture_progress = ExtResource("14_f00vm")
+
+[node name="Altar" parent="." unique_id=289189091 instance=ExtResource("19_imm86")]
+position = Vector2(2549, 128)
+
+[node name="Samurai" parent="." unique_id=1510816543 instance=ExtResource("20_2b6sr")]
+position = Vector2(1883, 363)
+
+[node name="Bark" parent="." unique_id=1928277040 instance=ExtResource("21_gcusc")]
+position = Vector2(2073, 267)
+
+[node name="Bark2" parent="." unique_id=196393697 instance=ExtResource("21_gcusc")]
+position = Vector2(1571, 214)
+
+[node name="Shroom" parent="." unique_id=31904279 instance=ExtResource("22_6lxbt")]
+position = Vector2(1856, 132)
+
+[node name="Shroom2" parent="." unique_id=930018863 instance=ExtResource("22_6lxbt")]
+position = Vector2(1614, 67)
+
+[node name="Shroom3" parent="." unique_id=1372322845 instance=ExtResource("22_6lxbt")]
+position = Vector2(1967, 495)
+
+[node name="Shroom4" parent="." unique_id=1277979012 instance=ExtResource("22_6lxbt")]
+position = Vector2(2374, 482)
+
+[node name="Samurai2" parent="." unique_id=198524890 instance=ExtResource("20_2b6sr")]
+position = Vector2(1295, 391)
+
+[node name="Shroom5" parent="." unique_id=2084305742 instance=ExtResource("22_6lxbt")]
+position = Vector2(1612, 332)
 
 [connection signal="body_entered" from="DoorReturn" to="DoorReturn" method="_on_door_deep_return_body_entered"]

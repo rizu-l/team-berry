@@ -9,9 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://bp2f3atgc5alp" path="res://assets/mp_bar_under.png" id="7_tm5al"]
 [ext_resource type="Texture2D" uid="uid://4ynelfejdvs8" path="res://assets/mp_bar_over.png" id="8_rp6eb"]
 [ext_resource type="Texture2D" uid="uid://dp3ywefc7qf8s" path="res://assets/mp_bar_progress.png" id="9_whypc"]
-[ext_resource type="Texture2D" uid="uid://brbi550jwv1sn" path="res://assets/boss_bar_under.png" id="10_vrejt"]
-[ext_resource type="Texture2D" uid="uid://q2fbfc1g4jrj" path="res://assets/boss_bar_over.png" id="11_ksbo0"]
-[ext_resource type="Texture2D" uid="uid://ccxrjc4iu5fek" path="res://assets/boss_bar_progress.png" id="12_rej68"]
 [ext_resource type="PackedScene" uid="uid://djgulxsq4f6dk" path="res://player/character_body_2d.tscn" id="13_oddhr"]
 [ext_resource type="Texture2D" uid="uid://7121funoq7ky" path="res://tileset/Stage1/basic.png" id="14_oytsp"]
 [ext_resource type="Texture2D" uid="uid://by1r5j0bh876w" path="res://tileset/Stage1/background_1/4 Forest parallax vertical skybox fulll.png" id="15_ehqr5"]
@@ -21,7 +18,10 @@
 [ext_resource type="Texture2D" uid="uid://dx10e8sfceyr1" path="res://tileset/Stage1/background_1/forest_mid.png" id="18_tm5al"]
 [ext_resource type="Texture2D" uid="uid://dc72twiprtkhd" path="res://tileset/Stage1/Mountainleft.png" id="20_rp6eb"]
 [ext_resource type="Script" uid="uid://r78aboed67tv" path="res://Stages/mountian.gd" id="20_whypc"]
+[ext_resource type="PackedScene" uid="uid://cyrwlobyu6t22" path="res://enemies/bark.tscn" id="21_ksbo0"]
 [ext_resource type="Texture2D" uid="uid://dosg086q56his" path="res://tileset/Stage1/Mountainright.png" id="21_whypc"]
+[ext_resource type="PackedScene" uid="uid://ctmjdx7ubn66k" path="res://enemies/shroom.tscn" id="22_rej68"]
+[ext_resource type="PackedScene" uid="uid://baid383s1rnt0" path="res://Objects/Altar.tscn" id="25_rej68"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p5r28"]
 texture = ExtResource("14_oytsp")
@@ -966,24 +966,48 @@ position = Vector2(-6, -59)
 polygon = PackedVector2Array(0, 0, 0, 150, 167, 150, 123, 124, 122, 119, 105, 109, 80, 70, 71, 76, 66, 59, 51, 46, 37, 31, 30, 19, 26, 21, 16, 2, 8, 1, 6, -1)
 
 [node name="Area2D" type="Area2D" parent="Mountian" unique_id=1626408500]
+collision_layer = 7
+collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mountian/Area2D" unique_id=416227802]
 position = Vector2(-6, -62.4375)
 shape = SubResource("RectangleShape2D_rp6eb")
 
-[node name="HUD" type="CanvasLayer" parent="." unique_id=440054139]
+[node name="Bark" parent="." unique_id=2066984932 instance=ExtResource("21_ksbo0")]
+position = Vector2(828, 308)
 
-[node name="HPUI" type="Control" parent="HUD" unique_id=1030375958]
+[node name="Shroom" parent="." unique_id=1896993021 instance=ExtResource("22_rej68")]
+position = Vector2(984, 444)
+
+[node name="Player" parent="." unique_id=1431541247 instance=ExtResource("13_oddhr")]
+position = Vector2(1311, 573)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=503099603]
+zoom = Vector2(4, 4)
+
+[node name="AbilityUnlock" parent="." unique_id=1363055432 instance=ExtResource("1_nxema")]
+position = Vector2(1326, 534)
+scale = Vector2(1, 1)
+
+[node name="Shroom2" parent="." unique_id=1437782986 instance=ExtResource("22_rej68")]
+position = Vector2(599, 65)
+
+[node name="Altar" parent="." unique_id=289189091 instance=ExtResource("25_rej68")]
+position = Vector2(1163, 525)
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=934629112]
+
+[node name="HPUI" type="Control" parent="HUD" unique_id=1079636849]
 layout_direction = 4
 layout_mode = 3
 anchors_preset = 0
-offset_left = 2528.0
-offset_top = 1619.0
-offset_right = 2688.0
-offset_bottom = 1779.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 172.0
+offset_bottom = 172.0
 script = ExtResource("2_fto8s")
 
-[node name="HPBar" type="TextureProgressBar" parent="HUD/HPUI" unique_id=475464283]
+[node name="HPBar" type="TextureProgressBar" parent="HUD/HPUI" unique_id=1394803026]
 layout_mode = 0
 offset_right = 32.0
 offset_bottom = 32.0
@@ -994,7 +1018,7 @@ texture_under = ExtResource("3_4cenr")
 texture_over = ExtResource("4_1pjtb")
 texture_progress = ExtResource("5_ehqr5")
 
-[node name="Label" type="Label" parent="HUD/HPUI" unique_id=1610242837]
+[node name="Label" type="Label" parent="HUD/HPUI" unique_id=245552387]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1013,15 +1037,15 @@ text = "67"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MPUI" type="Control" parent="HUD" unique_id=102894409]
+[node name="MPUI" type="Control" parent="HUD" unique_id=1594955915]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 2530.0
-offset_top = 1841.0
-offset_right = 2776.0
-offset_bottom = 1933.0
+offset_left = 206.0
+offset_top = 27.0
+offset_right = 452.0
+offset_bottom = 119.0
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="HUD/MPUI" unique_id=130946085]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="HUD/MPUI" unique_id=1563141793]
 layout_mode = 0
 offset_left = 10.999998
 offset_top = -6.0
@@ -1033,7 +1057,7 @@ texture_under = ExtResource("7_tm5al")
 texture_over = ExtResource("8_rp6eb")
 texture_progress = ExtResource("9_whypc")
 
-[node name="Label" type="Label" parent="HUD/MPUI" unique_id=337210409]
+[node name="Label" type="Label" parent="HUD/MPUI" unique_id=1343760106]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1050,49 +1074,5 @@ theme_override_fonts/font = ExtResource("6_mc48y")
 theme_override_font_sizes/font_size = 48
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="BossUI" type="Control" parent="HUD" unique_id=93582881]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 2950.0
-offset_top = 1817.0
-offset_right = 3490.0
-offset_bottom = 1937.0
-
-[node name="BossName" type="Label" parent="HUD/BossUI" unique_id=1563196562]
-layout_mode = 0
-offset_left = -391.0
-offset_top = 355.0
-offset_right = 102.0
-offset_bottom = 485.0
-theme_override_fonts/font = ExtResource("6_mc48y")
-theme_override_font_sizes/font_size = 128
-text = "FROGGER"
-
-[node name="BossBar" type="TextureProgressBar" parent="HUD/BossUI" unique_id=1662528797]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -385.0
-offset_top = 204.0
-offset_right = -892.9999
-offset_bottom = 92.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(15, 15)
-texture_under = ExtResource("10_vrejt")
-texture_over = ExtResource("11_ksbo0")
-texture_progress = ExtResource("12_rej68")
-
-[node name="Player" parent="." unique_id=1431541247 instance=ExtResource("13_oddhr")]
-position = Vector2(1311, 573)
-
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=503099603]
-zoom = Vector2(4, 4)
-
-[node name="AbilityUnlock" parent="." unique_id=1363055432 instance=ExtResource("1_nxema")]
-position = Vector2(1326, 534)
-scale = Vector2(1, 1)
 
 [connection signal="body_entered" from="Mountian/Area2D" to="Mountian" method="_on_area_mountian_entered"]

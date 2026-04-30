@@ -15,7 +15,7 @@ var pending_player_position: Vector2 = Vector2.ZERO
 var has_pending_player_position: bool = false
 var player_stats_initialized: bool = false
 
-const FIRST_LEVEL_PATH := "res://Stages/stage_3.tscn"
+const FIRST_LEVEL_PATH := "res://Stages/spire.tscn"
 
 func _ready():
 	RenderingServer.set_default_clear_color(Color(0.30,0.30,0.30,1.00))
