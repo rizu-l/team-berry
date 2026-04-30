@@ -1,0 +1,91 @@
+[gd_scene load_steps=0 format=3 uid="uid://bhulmp84fc6x5"]
+
+[ext_resource type="Script" uid="uid://sknphmgt5y6r" path="res://player/charm_unlock_screen.gd" id="1_u68lc"]
+[ext_resource type="Texture2D" uid="uid://bewq6rs2o4ftv" path="res://icons/wings-icon.png" id="2_gslvl"]
+[ext_resource type="FontFile" uid="uid://dwkvnvwhchnmj" path="res://icons/ARCADECLASSIC.TTF" id="3_nfqe7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_236hc"]
+draw_center = false
+border_width_bottom = 8
+border_color = Color(0.9899928, 0.9899928, 0.9899928, 1)
+expand_margin_left = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a3vjf"]
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 8.0
+expand_margin_right = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jw3af"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 8.0
+expand_margin_right = 8.0
+
+[node name="AbilityUnlockScreen" type="CanvasLayer" unique_id=1393382496]
+process_mode = 3
+script = ExtResource("1_u68lc")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=681138421]
+offset_right = 2304.0
+offset_bottom = 1296.0
+color = Color(0, 0, 0, 0.60784316)
+
+[node name="CenterContainer" type="CenterContainer" parent="ColorRect" unique_id=1547982461]
+layout_mode = 0
+offset_right = 2304.0
+offset_bottom = 1296.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/CenterContainer" unique_id=1429146764]
+layout_mode = 2
+
+[node name="IconIMG" type="TextureRect" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=1026300565]
+layout_mode = 2
+texture = ExtResource("2_gslvl")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=1660982552]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="ColorRect/CenterContainer/VBoxContainer/VBoxContainer" unique_id=2038537831]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("3_nfqe7")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_236hc")
+text = "NAME"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DescriptionLabel" type="Label" parent="ColorRect/CenterContainer/VBoxContainer/VBoxContainer" unique_id=1917864760]
+custom_minimum_size = Vector2(480, 256)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_nfqe7")
+theme_override_font_sizes/font_size = 32
+text = "Description"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CloseButton" type="Button" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=1960425762]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_nfqe7")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxFlat_a3vjf")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_jw3af")
+theme_override_styles/hover = SubResource("StyleBoxFlat_jw3af")
+theme_override_styles/focus = SubResource("StyleBoxFlat_jw3af")
+text = "CLOSE"
+
+[connection signal="pressed" from="ColorRect/CenterContainer/VBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]

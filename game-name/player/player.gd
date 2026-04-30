@@ -8,12 +8,13 @@ extends CharacterBody2D
 @onready var respawn_probe_area: Area2D = get_node_or_null("Area2D") as Area2D
 
 const ATTACK_ANIMATIONS := [&"Attack1", &"Attack2", &"Attack3"]
+const INVENTORY_UI_SCENE := preload("res://menus/InventoryUI.tscn")
 const WALK_SPEED = 100.0
 const SPRINT_SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 var currentState
-var jumpDirection = 0  # Store the jump direction
-var lastDirection = 1  # Store the last facing direction (1 = right, -1 = left)
+var jumpDirection = 0
+var lastDirection = 1
 var doubleJump = true
 var isDoubleJumping = false
 var is_dashing = false
@@ -33,14 +34,17 @@ var attack_hitbox_shapes = []
 var attack_hitbox_base_positions: Array[Vector2] = []
 var attack_hitbox_shape_base_positions: Array[Vector2] = []
 var last_safe_ground_position = Vector2.ZERO
-enum State { Idle, Walk, Run, Jump, Fall, DoubleJump, Blink, Dash }
+var current_inventory_ui: Node = null
+var is_sitting_at_altar = false
+var is_respawning = false
+enum State { Idle, Walk, Run, Jump, Fall, DoubleJump, Blink, Dash, Sit}
 
 @export var starting_max_hp: int = 100
 @export var starting_hp: int = 70
 @export var starting_max_mp: float = 100.0
 @export var starting_mp: float = 50.0
 @export var starting_attack: int = 10
-@export var mp_regen_per_second: float = 8.0
+@export var mp_regen_per_second: float = 3.0
 @export var heal_amount: int = 30
 @export var heal_mp_cost: float = 25.0
 @export var void_y_threshold: float = 1000.0
@@ -93,11 +97,14 @@ var unlocked_abilities: Dictionary:
 		return GameManager.get_unlocked_abilities()
 
 func _ready():
-	max_hp = starting_max_hp
-	hp = starting_hp
-	max_mp = starting_max_mp
-	mp = starting_mp
-	attack = starting_attack
+	GameManager.initialize_player_defaults(
+		starting_max_hp,
+		starting_hp,
+		starting_max_mp,
+		starting_mp,
+		starting_attack,
+		mp_regen_per_second
+	)
 	if start_with_blink:
 		GameManager.unlock_ability(AbilityData.ability_list.BLINK)
 	if dash_particles != null:
@@ -128,9 +135,21 @@ func _ready():
 	currentState = State.Idle
 	last_safe_ground_position = global_position
 	add_to_group("player")
+	GameManager.apply_pending_player_position(self)
 	player_animations()
 
 func _physics_process(delta: float) -> void:
+	if is_respawning:
+		return
+
+	if Input.is_action_just_pressed("inventory"):
+		open_inventory(false)
+
+	if is_sitting_at_altar:
+		velocity = Vector2.ZERO
+		player_animations()
+		return
+
 	check_void_fall()
 	update_respawn_invulnerability(delta)
 
@@ -158,7 +177,6 @@ func _physics_process(delta: float) -> void:
 
 	player_idle(delta)
 	
-	# Add the gravity.
 	if  !is_on_floor():
 		velocity += get_gravity() * delta
 	else:
@@ -187,6 +205,9 @@ func _physics_process(delta: float) -> void:
 	player_run(delta)
 	move_and_slide()
 	player_animations()
+
+	if hp <= 0:
+		respawn_at_last_altar()
 
 func check_void_fall() -> void:
 	if global_position.y <= void_y_threshold:
@@ -253,7 +274,7 @@ func regenerate_mp(delta: float) -> void:
 	if mp >= max_mp:
 		return
 
-	mp += mp_regen_per_second * delta
+	mp += GameManager.get_player_mp_regen() * delta
 
 func player_heal() -> void:
 	if not Input.is_action_just_pressed("heal"):
@@ -282,7 +303,7 @@ func update_attack_physics(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-func player_idle(delta):
+func player_idle(_delta):
 	if is_on_floor() and not is_attacking:
 		currentState = State.Idle
 
@@ -292,10 +313,11 @@ func player_attack() -> void:
 
 	if is_attacking or is_dashing or is_blinking:
 		return
-
+	
+	
 	perform_attack_combo()
 
-func player_run(delta):
+func player_run(_delta):
 	if damage_knockback_lock_remaining > 0.0:
 		return
 
@@ -324,7 +346,11 @@ func player_blink() -> void:
 
 	if not GameManager.has_ability(AbilityData.ability_list.BLINK):
 		return
+		
+	if mp <= 25:
+		return
 
+	mp -= 25
 	cancel_attack()
 	perform_blink()
 
@@ -365,7 +391,7 @@ func update_dash(delta: float) -> void:
 		set_dash_particles_active(false)
 		currentState = State.Idle if is_on_floor() else State.Fall
 		
-func player_jump(delta):
+func player_jump(_delta):
 	if damage_knockback_lock_remaining > 0.0:
 		if Input.is_action_just_released("jump") and velocity.y < 0:
 			velocity.y *= 0.3
@@ -384,14 +410,12 @@ func player_jump(delta):
 	
 	if Input.is_action_just_pressed("jump"):
 		cancel_attack()
-		# Ground jump
 		if is_on_floor():
 			velocity.y = JUMP_VELOCITY
 			if direction != 0:
 				jumpDirection = direction
 			else:
 				jumpDirection = lastDirection
-		# Double jump (only if WINGS ability is unlocked)
 		elif doubleJump and GameManager.has_ability(AbilityData.ability_list.WINGS):
 			velocity.y = JUMP_VELOCITY
 			doubleJump = false
@@ -413,13 +437,10 @@ func player_jump(delta):
 				elif not is_attacking:
 					currentState = State.Jump
 		
-	# Only update jump state if in the air
 	if not is_on_floor():
-		# Switch to fall animation if falling (velocity.y is positive)
 		if velocity.y > 0 and not is_attacking:
 			currentState = State.Fall
 		else:
-			# Still ascending - check if double jumping
 			if isDoubleJumping and not is_attacking:
 				currentState = State.DoubleJump
 			elif not is_attacking:
@@ -515,6 +536,8 @@ func get_safe_blink_distance(direction: float) -> float:
 
 func take_damage(amount: int) -> void:
 	hp -= amount
+	if hp <= 0:
+		respawn_at_last_altar()
 
 func apply_knockback(knockback_velocity: Vector2) -> void:
 	cancel_attack()
@@ -532,6 +555,48 @@ func apply_stun(duration: float) -> void:
 
 func heal(amount: int) -> void:
 	hp += amount
+
+func respawn_at_last_altar() -> void:
+	if is_respawning:
+		return
+
+	is_respawning = true
+	velocity = Vector2.ZERO
+	cancel_attack()
+	is_dashing = false
+	is_blinking = false
+	is_sitting_at_altar = false
+	get_tree().paused = false
+	GameManager.respawn_from_last_save()
+
+func sit_at_altar() -> void:
+	cancel_attack()
+	is_dashing = false
+	is_blinking = false
+	velocity = Vector2.ZERO
+	is_sitting_at_altar = true
+	currentState = State.Sit
+	player_animations()
+
+func stop_sitting_at_altar() -> void:
+	is_sitting_at_altar = false
+	currentState = State.Idle
+	player_animations()
+
+func open_inventory(at_altar: bool = false) -> void:
+	if current_inventory_ui != null and is_instance_valid(current_inventory_ui):
+		return
+
+	current_inventory_ui = INVENTORY_UI_SCENE.instantiate()
+	current_inventory_ui.process_mode = Node.PROCESS_MODE_ALWAYS
+	current_inventory_ui.tree_exited.connect(_on_inventory_closed)
+	get_tree().root.add_child(current_inventory_ui)
+	if current_inventory_ui.has_method("set_at_altar"):
+		current_inventory_ui.set_at_altar(at_altar)
+	get_tree().paused = true
+
+func _on_inventory_closed() -> void:
+	current_inventory_ui = null
 
 func disable_all_attack_hitboxes() -> void:
 	for shape in attack_hitbox_shapes:
@@ -623,3 +688,5 @@ func player_animations():
 		animated_sprite_2d.play("Blink")
 	elif currentState == State.Dash:
 		animated_sprite_2d.play("Fall")
+	elif currentState == State.Sit:
+		animated_sprite_2d.play("Sit")

@@ -1,0 +1,128 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddmicl4x648su"]
+
+[ext_resource type="Script" uid="uid://dibqxirgdh8d4" path="res://script/inventory_ui.gd" id="1_4x38u"]
+[ext_resource type="FontFile" uid="uid://dwkvnvwhchnmj" path="res://icons/ARCADECLASSIC.TTF" id="2_f3bf8"]
+
+[node name="InventoryUI" type="CanvasLayer" unique_id=477019824]
+layer = 20
+process_mode = 3
+script = ExtResource("1_4x38u")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Dim" type="ColorRect" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.72)
+
+[node name="Panel" type="PanelContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -590.0
+offset_top = -500.0
+offset_right = 590.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="Root/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_f3bf8")
+theme_override_font_sizes/font_size = 48
+text = "Inventory"
+horizontal_alignment = 1
+
+[node name="Content" type="HBoxContainer" parent="Root/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="StatsPanel" type="Panel" parent="Root/Panel/VBoxContainer/Content"]
+custom_minimum_size = Vector2(380, 720)
+layout_mode = 2
+
+[node name="StatsLabel" type="Label" parent="Root/Panel/VBoxContainer/Content/StatsPanel"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 364.0
+offset_bottom = 704.0
+theme_override_fonts/font = ExtResource("2_f3bf8")
+theme_override_font_sizes/font_size = 26
+autowrap_mode = 2
+
+[node name="RightColumn" type="VBoxContainer" parent="Root/Panel/VBoxContainer/Content"]
+custom_minimum_size = Vector2(680, 720)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="EquippedCharmsPanel" type="Panel" parent="Root/Panel/VBoxContainer/Content/RightColumn"]
+custom_minimum_size = Vector2(680, 416)
+layout_mode = 2
+
+[node name="EquippedList" type="VBoxContainer" parent="Root/Panel/VBoxContainer/Content/RightColumn/EquippedCharmsPanel"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 664.0
+offset_bottom = 400.0
+theme_override_constants/separation = 8
+
+[node name="AvailableCharmsPanel" type="Panel" parent="Root/Panel/VBoxContainer/Content/RightColumn"]
+custom_minimum_size = Vector2(680, 288)
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Root/Panel/VBoxContainer/Content/RightColumn/AvailableCharmsPanel"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 664.0
+offset_bottom = 272.0
+
+[node name="AvailableList" type="VBoxContainer" parent="Root/Panel/VBoxContainer/Content/RightColumn/AvailableCharmsPanel/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Tooltip" type="Label" parent="Root/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_f3bf8")
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Root/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 2
+
+[node name="CloseButton" type="Button" parent="Root/Panel/VBoxContainer/Buttons"]
+custom_minimum_size = Vector2(190, 58)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_f3bf8")
+theme_override_font_sizes/font_size = 30
+text = "Close"
+
+[node name="SaveButton" type="Button" parent="Root/Panel/VBoxContainer/Buttons"]
+custom_minimum_size = Vector2(190, 58)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_f3bf8")
+theme_override_font_sizes/font_size = 30
+text = "Save"
