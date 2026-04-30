@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://b3l5dypeta7am"]
+[gd_scene load_steps=46 format=3 uid="uid://b3l5dypeta7am"]
 
 [ext_resource type="Script" uid="uid://ch71ymrapdb6w" path="res://enemies/samurai.gd" id="1_snkc1"]
 [ext_resource type="Texture2D" uid="uid://cqxt6icvacs2m" path="res://assets/enemies/samurai/ATTACK 1.png" id="2_snkc1"]

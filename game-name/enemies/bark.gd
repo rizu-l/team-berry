@@ -140,7 +140,7 @@ func process_flying(delta: float) -> void:
 	update_facing(velocity.x)
 	play_animation(&"fly")
 
-func can_start_smash(distance_to_target) -> bool:
+func can_start_smash(distance_to_target: float) -> bool:
 	if smash_cooldown_remaining > 0.0:
 		return false
 	if distance_to_target > smash_trigger_range:
@@ -277,7 +277,7 @@ func constrain_flight_position(position: Vector2) -> Vector2:
 
 	return constrained_position
 
-func move_toward_flight_position(position: Vector2, speed_scale = 1.0) -> void:
+func move_toward_flight_position(position: Vector2, speed_scale: float = 1.0) -> void:
 	if is_outside_spawn_leash():
 		position = spawn_position
 
@@ -307,7 +307,7 @@ func randomize_instance_behavior() -> void:
 func get_smash_align_position(target_position: Vector2) -> Vector2:
 	return constrain_flight_position(target_position + Vector2(current_align_lateral_offset, -smash_align_height + align_height_offset))
 
-func get_randomized_cooldown(base_cooldown) -> float:
+func get_randomized_cooldown(base_cooldown: float) -> float:
 	return base_cooldown * cooldown_multiplier * rng.randf_range(0.85, 1.15)
 
 func is_outside_spawn_leash() -> bool:

@@ -117,10 +117,10 @@ func process_dodging(delta: float) -> void:
 	velocity.x = get_ledge_safe_direction(dodge_direction) * DODGE_SPEED
 	play_animation(&"run" if velocity.x != 0.0 else &"idle")
 
-func can_start_attack(abs_distance_x) -> bool:
+func can_start_attack(abs_distance_x: float) -> bool:
 	return attack_cooldown_remaining <= 0.0 and abs_distance_x <= attack_range and is_on_floor()
 
-func should_dodge_player_attack(target: Node2D, abs_distance_x) -> bool:
+func should_dodge_player_attack(target: Node2D, abs_distance_x: float) -> bool:
 	if dodge_cooldown_remaining > 0.0:
 		return false
 	if abs_distance_x > DODGE_DETECTION_RANGE:

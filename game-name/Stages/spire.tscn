@@ -1,13 +1,15 @@
 [gd_scene format=4 uid="uid://b5y2liyn4y7lo"]
 
 [ext_resource type="Texture2D" uid="uid://c37ay0vumv7yg" path="res://tileset/all_original_edited_tiles-1.png-8.png" id="1_xd8p0"]
-[ext_resource type="Texture2D" uid="uid://b15x148g5ky46" path="res://tileset/SPire/Dungeon Tile Set.png" id="2_8dyxi"]
+[ext_resource type="Texture2D" uid="uid://bqiue6r0htbu4" path="res://tileset/SPire/Dungeon Tile Set.png" id="2_8dyxi"]
 [ext_resource type="PackedScene" uid="uid://cl8ybwul03bxf" path="res://Stages/elevator.tscn" id="2_xd8p0"]
 [ext_resource type="PackedScene" uid="uid://djgulxsq4f6dk" path="res://player/character_body_2d.tscn" id="3_8dyxi"]
 [ext_resource type="Script" uid="uid://br8351sesm0ac" path="res://Stages/door_forest.gd" id="4_2n13m"]
 [ext_resource type="PackedScene" uid="uid://naxkkcbggpek" path="res://Stages/elevatorUI.tscn" id="4_hnnpp"]
 [ext_resource type="Texture2D" uid="uid://dtkwkro2ocmia" path="res://tileset/SPire/Screenshot 2026-04-26 at 4.50.33 PM.png" id="5_bpxqv"]
 [ext_resource type="Script" uid="uid://bmmwsn5vvgpke" path="res://Stages/door_deep.gd" id="6_2n13m"]
+[ext_resource type="Script" uid="uid://dadkjgu2ryctw" path="res://Stages/portal_deep.gd" id="9_7pxsv"]
+[ext_resource type="Texture2D" uid="uid://csacgftq2xk6d" path="res://tileset/SPire/Pixel Art Animated Portal/Frames/portal1_frame_5.png" id="10_4rmd5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bpxqv"]
 texture = ExtResource("2_8dyxi")
@@ -997,6 +999,10 @@ sources/1 = SubResource("TileSetAtlasSource_ayy7q")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fuxyf"]
 size = Vector2(52, 78)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_l6fc1"]
+radius = 19.0
+height = 52.0
+
 [node name="Spire" type="Node2D" unique_id=1207969991]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=587062595]
@@ -1019,6 +1025,10 @@ floor_markers = [NodePath("../Floor0"), NodePath("../Floor1"), NodePath("../Floo
 [node name="Camera2D" type="Camera2D" parent="elevator" unique_id=99165547]
 position = Vector2(8, -23)
 zoom = Vector2(3.5, 3.5)
+limit_left = -350
+limit_top = -815
+limit_right = 350
+limit_bottom = 30
 
 [node name="DoorForest" type="Area2D" parent="." unique_id=1057835038]
 position = Vector2(556, -632)
@@ -1082,6 +1092,18 @@ scale = Vector2(0.75, 0.75)
 transform = Transform2D(0.75, 0, 0, 0.75, 30, -225)
 follow_viewport_enabled = true
 
+[node name="PortalDeep" type="Area2D" parent="." unique_id=1471576454]
+script = ExtResource("9_7pxsv")
+
+[node name="AnimatedSprite2D" type="Sprite2D" parent="PortalDeep" unique_id=1047654379]
+position = Vector2(279, -30)
+texture = ExtResource("10_4rmd5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PortalDeep" unique_id=1057156087]
+position = Vector2(279, -31)
+shape = SubResource("CapsuleShape2D_l6fc1")
+
 [connection signal="body_entered" from="DoorForest" to="DoorForest" method="_on_door_cliff_body_entered"]
 [connection signal="body_entered" from="DoorCliff" to="DoorCliff" method="_on_door_cliff_body_entered"]
 [connection signal="body_entered" from="DoorDeep" to="DoorDeep" method="_on_door_cliff_body_entered"]
+[connection signal="body_entered" from="PortalDeep" to="PortalDeep" method="_on_portal_deep_body_entered"]

@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cyrwlobyu6t22"]
+[gd_scene load_steps=73 format=3 uid="uid://cyrwlobyu6t22"]
 
 [ext_resource type="Script" uid="uid://brgtgcbkqdnhb" path="res://enemies/bark.gd" id="1_bark"]
 [ext_resource type="Texture2D" uid="uid://euwgwcrjnh2k" path="res://assets/enemies/bark/Enemy3-Idle.png" id="2_idle"]
