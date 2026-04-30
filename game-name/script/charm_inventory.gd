@@ -9,7 +9,7 @@ var equipped_charm_ids: Array = []
 var charm_data = CHARM_DATA.new()
 
 func _init():
-	for charm_id in charm_data.get_default_unlocked_charms():
+	for charm_id in charm_data.get_all_charm_ids():
 		unlock_charm(charm_id)
 
 func unlock_charm(charm_id) -> bool:
