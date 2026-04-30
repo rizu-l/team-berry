@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://c1dtxbmv8y4ou"]
+
+[ext_resource type="Script" uid="uid://5b8qc7g3yj5k" path="res://script/main_menu.gd" id="1_8gy84"]
+[ext_resource type="FontFile" uid="uid://dwkvnvwhchnmj" path="res://icons/ARCADECLASSIC.TTF" id="2_ij7vn"]
+
+[node name="MainMenu" type="Control" unique_id=2056225549]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_8gy84")
+
+[node name="Background" type="ColorRect" parent="." unique_id=382905526]
+layout_mode = 0
+offset_right = 2304.0
+offset_bottom = 1296.0
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=321868453]
+layout_mode = 0
+offset_left = 802.0
+offset_right = 1502.0
+offset_bottom = 1296.0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer" unique_id=836950349]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_ij7vn")
+theme_override_font_sizes/font_size = 128
+text = "GAME NAME"
+horizontal_alignment = 1
+
+[node name="StartButton" type="Button" parent="VBoxContainer" unique_id=388475307]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 0.34117648, 1)
+theme_override_fonts/font = ExtResource("2_ij7vn")
+theme_override_font_sizes/font_size = 64
+text = "New Game"
+
+[node name="LoadButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 0.34117648, 1)
+theme_override_fonts/font = ExtResource("2_ij7vn")
+theme_override_font_sizes/font_size = 64
+text = "Load Game"
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer" unique_id=1843902409]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 0.34117648, 1)
+theme_override_fonts/font = ExtResource("2_ij7vn")
+theme_override_font_sizes/font_size = 64
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=1370024762]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 0.34117648, 1)
+theme_override_fonts/font = ExtResource("2_ij7vn")
+theme_override_font_sizes/font_size = 64
+text = "Quit Game"
