@@ -15,7 +15,7 @@ var pending_player_position: Vector2 = Vector2.ZERO
 var has_pending_player_position: bool = false
 var player_stats_initialized: bool = false
 
-const FIRST_LEVEL_PATH := "res://Stages/stage_1.tscn"
+const FIRST_LEVEL_PATH := "res://Stages/stage_3.tscn"
 
 func _ready():
 	RenderingServer.set_default_clear_color(Color(0.30,0.30,0.30,1.00))
@@ -194,6 +194,25 @@ func start_loaded_game(slot: int) -> void:
 	var save_data := get_save_data(slot)
 	var next_scene := FIRST_LEVEL_PATH
 	if save_data != null and save_data.level_path != "":
+		next_scene = save_data.level_path
+	get_tree().change_scene_to_file(next_scene)
+
+func respawn_from_last_save() -> void:
+	get_tree().paused = false
+
+	var save_data := get_save_data(current_save_slot)
+	if save_data == null:
+		reset_player_data()
+		get_tree().change_scene_to_file(FIRST_LEVEL_PATH)
+		return
+
+	if not load_game(current_save_slot):
+		reset_player_data()
+		get_tree().change_scene_to_file(FIRST_LEVEL_PATH)
+		return
+
+	var next_scene := FIRST_LEVEL_PATH
+	if save_data.level_path != "":
 		next_scene = save_data.level_path
 	get_tree().change_scene_to_file(next_scene)
 

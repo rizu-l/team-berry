@@ -1,6 +1,8 @@
 extends AnimatedSprite2D
 
-@export var Charm_to_Unlock: CharmData.charm_list
+const CHARM_DATA := preload("res://script/charm_data.gd")
+
+@export var Charm_to_Unlock: int
 const charm_unlock_screen_preload = preload("res://player/charm_unlock_screen.tscn")
 
 func _ready():

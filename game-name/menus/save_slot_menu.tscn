@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://djjeg0fuv6evq"]
+[gd_scene load_steps=0 format=3 uid="uid://djjeg0fuv6evq"]
 
 [ext_resource type="Script" uid="uid://c0qrjnmb4woa4" path="res://script/save_slot_menu.gd" id="1_7p43q"]
 [ext_resource type="FontFile" uid="uid://dwkvnvwhchnmj" path="res://icons/ARCADECLASSIC.TTF" id="2_j1u8s"]

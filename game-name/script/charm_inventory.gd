@@ -2,17 +2,18 @@ extends Resource
 class_name CharmInventory
 
 const MAX_EQUIPPED = 4
+const CHARM_DATA := preload("res://script/charm_data.gd")
 
 var unlocked_charms: Dictionary = {}
 var equipped_charm_ids: Array = []
 
 func _init():
-	unlock_charm(CharmData.charm_list.VITALITY_CHARM)
-	unlock_charm(CharmData.charm_list.SHARP_EDGE)
-	unlock_charm(CharmData.charm_list.MYSTIC_WELL)
+	unlock_charm(CHARM_DATA.charm_list.VITALITY_CHARM)
+	unlock_charm(CHARM_DATA.charm_list.SHARP_EDGE)
+	unlock_charm(CHARM_DATA.charm_list.MYSTIC_WELL)
 
 func unlock_charm(charm_id) -> bool:
-	if not CharmData.INFO.has(charm_id):
+	if not CHARM_DATA.INFO.has(charm_id):
 		return false
 	
 	unlocked_charms[charm_id] = true
@@ -60,8 +61,8 @@ func get_total_buffs() -> Dictionary:
 	}
 	
 	for charm_id in equipped_charm_ids:
-		if CharmData.INFO.has(charm_id):
-			var charm_info = CharmData.INFO[charm_id]
+		if CHARM_DATA.INFO.has(charm_id):
+			var charm_info = CHARM_DATA.INFO[charm_id]
 			if charm_info.has("stat_buffs"):
 				var buffs = charm_info["stat_buffs"]
 				for stat in buffs.keys():
@@ -86,10 +87,10 @@ func can_equip_charm(charm_id) -> bool:
 	return true
 
 func get_charm(charm_id) -> Dictionary:
-	if not CharmData.INFO.has(charm_id):
+	if not CHARM_DATA.INFO.has(charm_id):
 		return {}
 
-	var charm_info: Dictionary = CharmData.INFO[charm_id]
+	var charm_info: Dictionary = CHARM_DATA.INFO[charm_id]
 	return {
 		"charm_id": charm_id,
 		"display_name": charm_info.get("name", "Unknown Charm"),
@@ -114,7 +115,7 @@ func get_effect_text(stat_buffs: Dictionary) -> String:
 
 func get_all_charms() -> Array:
 	var charms: Array = []
-	for charm_id in CharmData.INFO.keys():
+	for charm_id in CHARM_DATA.INFO.keys():
 		charms.append(get_charm(charm_id))
 	return charms
 

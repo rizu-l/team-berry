@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bhulmp84fc6x5"]
+[gd_scene load_steps=0 format=3 uid="uid://bhulmp84fc6x5"]
 
 [ext_resource type="Script" uid="uid://sknphmgt5y6r" path="res://player/charm_unlock_screen.gd" id="1_u68lc"]
 [ext_resource type="Texture2D" uid="uid://bewq6rs2o4ftv" path="res://icons/wings-icon.png" id="2_gslvl"]

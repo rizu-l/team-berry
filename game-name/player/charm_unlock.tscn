@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://krgpwqrvjcxb"]
+[gd_scene load_steps=0 format=3 uid="uid://krgpwqrvjcxb"]
 
 [ext_resource type="Script" uid="uid://c048rn58sjnu6" path="res://player/charm_unlock.gd" id="1_84e7y"]
 

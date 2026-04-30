@@ -36,6 +36,7 @@ var attack_hitbox_shape_base_positions: Array[Vector2] = []
 var last_safe_ground_position = Vector2.ZERO
 var current_inventory_ui: Node = null
 var is_sitting_at_altar = false
+var is_respawning = false
 enum State { Idle, Walk, Run, Jump, Fall, DoubleJump, Blink, Dash, Sit}
 
 @export var starting_max_hp: int = 100
@@ -138,6 +139,9 @@ func _ready():
 	player_animations()
 
 func _physics_process(delta: float) -> void:
+	if is_respawning:
+		return
+
 	if Input.is_action_just_pressed("inventory"):
 		open_inventory(false)
 
@@ -201,6 +205,9 @@ func _physics_process(delta: float) -> void:
 	player_run(delta)
 	move_and_slide()
 	player_animations()
+
+	if hp <= 0:
+		respawn_at_last_altar()
 
 func check_void_fall() -> void:
 	if global_position.y <= void_y_threshold:
@@ -529,6 +536,8 @@ func get_safe_blink_distance(direction: float) -> float:
 
 func take_damage(amount: int) -> void:
 	hp -= amount
+	if hp <= 0:
+		respawn_at_last_altar()
 
 func apply_knockback(knockback_velocity: Vector2) -> void:
 	cancel_attack()
@@ -546,6 +555,19 @@ func apply_stun(duration: float) -> void:
 
 func heal(amount: int) -> void:
 	hp += amount
+
+func respawn_at_last_altar() -> void:
+	if is_respawning:
+		return
+
+	is_respawning = true
+	velocity = Vector2.ZERO
+	cancel_attack()
+	is_dashing = false
+	is_blinking = false
+	is_sitting_at_altar = false
+	get_tree().paused = false
+	GameManager.respawn_from_last_save()
 
 func sit_at_altar() -> void:
 	cancel_attack()
